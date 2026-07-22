@@ -1,14 +1,40 @@
 :root {
-  --header-height: 88px;
+  /* Brand */
+  --color-brand-primary: #2b99ff;
+  --color-brand-secondary: #8a4dff;
+  --color-brand-tertiary: #00d9ff;
 
+  /* Background */
+  --color-bg-primary: #050505;
+  --color-bg-secondary: #101114;
+
+  /* Text */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d6d7db;
+
+  /* Border */
+  --color-border: rgba(255, 255, 255, 0.12);
+
+  /* Radius */
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Shadow */
+  --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.3);
+
+  /* Glass */
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-blur: 20px;
+
+  /* Layout */
   --container: 1440px;
 
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 40px;
+  /* Navigation */
+  --navbar-height: 80px;
 
-  --transition-fast: 0.2s;
-  --transition-medium: 0.4s;
-  --transition-slow: 0.8s;
+  /* Motion */
+  --transition-fast: 200ms;
+  --transition-normal: 350ms;
+  --transition-slow: 800ms;
 }

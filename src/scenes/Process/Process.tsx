@@ -1,7 +1,9 @@
 const Process = () => {
   return (
-    <section id="process">
-      <h1>Process Scene</h1>
+    <section id="process" style={{
+                minHeight: "100vh",
+            }}>
+      <h1>Process</h1>
     </section>
   );
 };

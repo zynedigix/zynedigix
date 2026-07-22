@@ -1,7 +1,9 @@
 const Services = () => {
   return (
-    <section id="services">
-      <h1>Services Scene</h1>
+    <section id="services" style={{
+                minHeight: "100vh",
+            }}>
+      <h1>Services</h1>
     </section>
   );
 };

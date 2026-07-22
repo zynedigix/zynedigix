@@ -1,9 +1,14 @@
 const Identity = () => {
-  return (
-    <section id="identity">
-      <h1>Identity Scene</h1>
-    </section>
-  );
+    return (
+        <section
+            id="identity"
+            style={{
+                minHeight: "100vh",
+            }}
+        >
+            <h1>Identity</h1>
+        </section>
+    );
 };
 
 export default Identity;

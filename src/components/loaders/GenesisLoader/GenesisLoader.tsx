@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { useLoaderStore } from "@/systems/loader/loader";
 
 const GenesisLoader = () => {
-  const { progress, setProgress, finishLoading } = useLoaderStore();
+  const progress = useLoaderStore((state) => state.progress);
+  const setProgress = useLoaderStore((state) => state.setProgress);
+  const finishLoading = useLoaderStore((state) => state.finishLoading);
 
   useEffect(() => {
     let value = 0;

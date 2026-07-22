@@ -1,14 +1,20 @@
-:root {
-  --header-height: 88px;
+html {
+  font-family: "Inter", sans-serif;
+}
 
-  --container: 1440px;
+body {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
 
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --radius-xl: 40px;
-
-  --transition-fast: 0.2s;
-  --transition-medium: 0.4s;
-  --transition-slow: 0.8s;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
 }

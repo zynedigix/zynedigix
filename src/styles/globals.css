@@ -1,5 +1,39 @@
+/* ==========================================================================
+   ZyneDigix Global Styles
+   ========================================================================== */
+
 @import "./reset.css";
 @import "./variables.css";
+@import "./theme.css";
 @import "./typography.css";
 @import "./animations.css";
 @import "./utilities.css";
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand-primary);
+  color: #ffffff;
+}
+
+#root {
+  min-height: 100vh;
+}

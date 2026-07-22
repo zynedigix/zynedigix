@@ -1,7 +1,9 @@
 const Portfolio = () => {
   return (
-    <section id="portfolio">
-      <h1>Portfolio Scene</h1>
+    <section id="portfolio" style={{
+                minHeight: "100vh",
+            }}>
+      <h1>Portfolio</h1>
     </section>
   );
 };

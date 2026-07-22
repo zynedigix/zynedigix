@@ -1,5 +1,4 @@
 import { HelmetProvider } from "react-helmet-async";
-import { BrowserRouter } from "react-router-dom";
 
 import GenesisLoader from "@/components/loaders/GenesisLoader/GenesisLoader";
 import AppRouter from "@/app/router/AppRouter";
@@ -10,9 +9,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <BrowserRouter>
-        {isLoading ? <GenesisLoader /> : <AppRouter />}
-      </BrowserRouter>
+      {isLoading ? <GenesisLoader /> : <AppRouter />}
     </HelmetProvider>
   );
 }
