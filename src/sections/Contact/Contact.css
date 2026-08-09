@@ -1,0 +1,508 @@
+/* ===========================================================
+   CONTACT SECTION
+=========================================================== */
+.contact-section{
+    position:relative;
+    padding:140px 0;
+    background:#F8FAFB;
+    overflow:hidden;
+}
+.contact-container{
+    width:min(1400px,92%);
+    margin:auto;
+    display:grid;
+    grid-template-columns:430px 1fr;
+    gap:60px;
+    align-items:start;
+}
+/* ===========================================================
+   LEFT PANEL
+=========================================================== */
+.contact-left{
+    position:sticky;
+    top:120px;
+}
+.contact-label{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 24px;
+    border-radius:999px;
+    background:#E8F8F6;
+    color:#0F9E90;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:3px;
+    margin-bottom:24px;
+}
+.contact-left h2{
+    font-size:clamp(42px,5vw,72px);
+    line-height:1.05;
+    letter-spacing:-2px;
+    color:#111827;
+    font-weight: 700;
+    margin-bottom:24px;
+}
+.contact-left p{
+    color:#1D3633;
+    font-size:18px;
+    line-height:1.9;
+    margin-bottom:45px;
+}
+/* ===========================================================
+   CONTACT INFO
+=========================================================== */
+.contact-info{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    margin-bottom:40px;
+}
+.contact-item{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:18px 20px;
+    border-radius:18px;
+    background:#ffffff;
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.05);
+    transition:.35s ease;
+}
+.contact-item:hover{
+    transform:translateX(8px);
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.08);
+}
+.contact-item svg{
+    color:#19C5B2;
+    flex-shrink:0;
+}
+.contact-item span{
+    color:#374151;
+    font-size:16px;
+    font-weight:500;
+}
+/* ===========================================================
+   SOCIALS
+=========================================================== */
+.contact-socials{
+    display:flex;
+    gap:16px;
+}
+.contact-socials a{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    background:#ffffff;
+    color:#0F9E90;
+    box-shadow:
+        0 12px 28px rgba(0,0,0,.05);
+    transition:.35s ease;
+}
+.contact-socials a:hover{
+    background:#19C5B2;
+    color:#ffffff;
+    transform:translateY(-5px);
+}
+/* ===========================================================
+   RIGHT PANEL
+=========================================================== */
+.contact-right{
+    background:#ffffff;
+    border-radius:32px;
+    padding:48px;
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.06);
+    position:relative;
+    overflow:hidden;
+}
+.contact-right::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        135deg,
+        rgba(25,197,178,.05),
+        transparent 60%
+    );
+    pointer-events:none;
+}
+/* ===========================================================
+   FORM
+=========================================================== */
+.contact-form{
+    position:relative;
+    z-index:2;
+}
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+    margin-bottom:22px;
+}
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+.select-group {
+    position: relative;
+}
+.select-group::after{
+  content:"";
+  position:absolute;
+  right:24px;
+  top:50%;
+  width:12px;
+  height:12px;
+  transform:translateY(80%);
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat center;
+  background-size:12px;
+  pointer-events:none;
+}
+.form-group label{
+    margin-bottom:10px;
+    font-size:16px;
+    font-weight:600;
+    color:#374151;
+}
+/* ===========================================================
+   INPUTS
+=========================================================== */
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:16px 18px;
+    border-radius:16px;
+    border:1px solid #E5E7EB;
+    background:#F9FAFB;
+    color:#111827;
+    font-size:15px;
+    outline:none;
+    transition:all .3s ease;
+    font-family:inherit;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder{
+    color:#9CA3AF;
+}
+.form-group textarea{
+    resize:vertical;
+    min-height:160px;
+}
+/* ===========================================================
+   FOCUS EFFECT
+=========================================================== */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:#19C5B2;
+    background:#ffffff;
+    box-shadow:
+        0 0 0 4px rgba(25,197,178,.12);
+}
+/* ===========================================================
+   SELECT
+=========================================================== */
+.form-group select{
+    /* cursor:pointer; */
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    padding:16px 60px 16px 18px;
+}
+/* ===========================================================
+   SUBMIT BUTTON
+=========================================================== */
+.contact-submit{
+    margin-top:14px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    border:none;
+    cursor:pointer;
+    border-radius:999px;
+    padding:18px 34px;
+    background:linear-gradient(
+        135deg,
+        #19C5B2,
+        #0F9E90
+    );
+    color:#ffffff;
+    font-size:17px;
+    font-weight:700;
+    transition:all .35s ease;
+    box-shadow:
+        0 18px 45px rgba(25,197,178,.28);
+}
+.contact-submit:hover{
+    transform:translateY(-4px);
+    box-shadow:
+        0 28px 60px rgba(25,197,178,.38);
+}
+.contact-submit svg{
+    transition:transform .35s ease;
+}
+.contact-submit:hover svg{
+    transform:translateX(6px);
+}
+/* ===========================================================
+   BACKGROUND DECORATION
+=========================================================== */
+.contact-section::before{
+    content:"";
+    position:absolute;
+    width:520px;
+    height:520px;
+    top:-180px;
+    right:-180px;
+    border-radius:50%;
+    background:
+    radial-gradient(
+        circle,
+        rgba(25,197,178,.08),
+        transparent 70%
+    );
+    filter:blur(30px);
+    pointer-events:none;
+}
+.contact-section::after{
+    content:"";
+    position:absolute;
+    width:420px;
+    height:420px;
+    bottom:-160px;
+    left:-140px;
+    border-radius:50%;
+    background:
+    radial-gradient(
+        circle,
+        rgba(15,158,144,.06),
+        transparent 70%
+    );
+    filter:blur(25px);
+    pointer-events:none;
+}
+/* ===========================================================
+   TABLET
+=========================================================== */
+@media (max-width:1100px){
+.contact-container{
+grid-template-columns:1fr;
+gap:60px;
+}
+.contact-left{
+position:relative;
+top:0;
+}
+.contact-right{
+padding:40px;
+}
+}
+/* ===========================================================
+   MOBILE
+=========================================================== */
+@media (max-width:768px){
+.contact-section{
+padding:90px 0;
+}
+.contact-container{
+width:min(92%,100%);
+gap:45px;
+}
+.contact-left{
+text-align:center;
+}
+.contact-left h2{
+font-size:42px;
+}
+.contact-left p{
+font-size:18px;
+line-height:1.8;
+}
+.contact-info{
+margin-bottom:32px;
+}
+.contact-item{
+padding:16px;
+justify-content:flex-start;
+}
+.contact-item span{
+font-size:15px;
+}
+.contact-socials{
+justify-content:center;
+flex-wrap:wrap;
+}
+.contact-socials a{
+width:48px;
+height:48px;
+}
+.contact-right{
+padding:28px;
+border-radius:24px;
+}
+.form-grid{
+grid-template-columns:1fr;
+gap:18px;
+margin-bottom:18px;
+}
+.form-group label{
+font-size:14px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+padding:15px 16px;
+font-size:15px;
+border-radius:14px;
+}
+.form-group textarea{
+min-height:140px;
+}
+.contact-submit{
+width:100%;
+padding:18px;
+font-size:16px;
+}
+}
+/* ===========================================================
+   LARGE DESKTOP
+=========================================================== */
+@media (min-width:1600px){
+.contact-container{
+max-width:1500px;
+}
+.contact-left h2{
+font-size:78px;
+}
+.contact-right{
+padding:60px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea{
+font-size:16px;
+}
+.contact-submit{
+font-size:18px;
+padding:20px 38px;
+}
+}
+/* ===========================================================
+   ACCESSIBILITY
+=========================================================== */
+.contact-submit:focus-visible,
+.contact-socials a:focus-visible,
+.form-group input:focus-visible,
+.form-group select:focus-visible,
+.form-group textarea:focus-visible{
+outline:3px solid rgba(25,197,178,.35);
+outline-offset:3px;
+}
+
+/* Forms Error  */
+
+.error{
+color:#ef4444;
+font-size:13px;
+margin-top:6px;
+display:block;
+font-weight:500;
+}
+
+input.error-border,
+select.error-border,
+textarea.error-border{
+border:1px solid #ef4444;
+}
+
+------------
+
+.success-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(8px);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+animation:fadeIn .3s ease;
+}
+
+.success-modal{
+width:min(420px,90%);
+background:#fff;
+border-radius:24px;
+padding:42px;
+text-align:center;
+box-shadow:0 30px 80px rgba(0,0,0,.18);
+animation:popup .35s ease;
+}
+
+.success-icon{
+width:72px;
+height:72px;
+margin:0 auto 20px;
+border-radius:50%;
+background:#19C5B2;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:34px;
+font-weight:700;
+}
+
+.success-modal h3{
+font-size:32px;
+margin-bottom:12px;
+color:#111827;
+}
+
+.success-modal p{
+font-size:17px;
+line-height:1.8;
+color:#6B7280;
+margin-bottom:28px;
+}
+
+.success-btn{
+border:none;
+cursor:pointer;
+padding:14px 34px;
+border-radius:999px;
+background:#19C5B2;
+color:#fff;
+font-size:16px;
+font-weight:600;
+transition:.3s;
+}
+
+.success-btn:hover{
+background:#0F9E90;
+transform:translateY(-2px);
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+@keyframes popup{
+from{
+opacity:0;
+transform:scale(.85);
+}
+to{
+opacity:1;
+transform:scale(1);
+}
+}

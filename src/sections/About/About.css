@@ -1,0 +1,118 @@
+.about-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 120px 0;
+  overflow: hidden;
+}
+
+/* ------------------------------ */
+/* Right Video */
+/* ------------------------------ */
+
+.about-video-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  will-change: transform;
+  animation: floating 6s ease-in-out infinite;
+}
+
+.about-video-glow {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+
+  width: 78%;
+  height: 78%;
+
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(22,198,183,.14) 0%,
+    rgba(22,198,183,.06) 45%,
+    transparent 72%
+  );
+
+  filter: blur(70px);
+
+  animation: glowPulse 5s ease-in-out infinite;
+
+  z-index: 0;
+}
+
+.about-video-card {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+  max-width: 720px;
+
+  aspect-ratio: 1 / 1;
+
+  padding: 18px;
+
+  overflow: hidden;
+
+  border-radius: 42px;
+
+  background: #fff;
+
+  border: 1px solid rgba(22,198,183,.12);
+
+  box-shadow:
+      0 30px 90px rgba(0,0,0,.06),
+      0 0 0 1px rgba(255,255,255,.85) inset;
+}
+
+.about-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 24px;
+}
+
+/* ------------------------------ */
+/* Animations */
+/* ------------------------------ */
+
+@keyframes floating {
+
+  0%{
+    transform:translate3d(0,0,0);
+  }
+
+  50%{
+    transform:translate3d(0,-6px,0);
+  }
+
+  100%{
+    transform:translate3d(0,0,0);
+  }
+
+}
+
+@keyframes glowPulse{
+
+  0%{
+    opacity:.55;
+    transform:scale(1);
+  }
+
+  50%{
+    opacity:.9;
+    transform:scale(1.05);
+  }
+
+  100%{
+    opacity:.55;
+    transform:scale(1);
+  }
+
+}

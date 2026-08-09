@@ -1,0 +1,225 @@
+/* ===========================================================
+   WHY CHOOSE ZYNEDIGIX
+=========================================================== */
+.why-section {
+    position: relative;
+    padding: 140px 0;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.why-container {
+    width: min(1400px, 92%);
+    margin: auto;
+}
+
+/* ===========================================================
+   Header
+=========================================================== */
+.why-header {
+    text-align: center;
+    margin-bottom: 90px;
+}
+
+.why-label {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: #EAF9F7;
+    color: #0F9E90;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+}
+
+.why-header h2 {
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1.08;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -2px;
+}
+
+.why-header p {
+    width: min(760px, 100%);
+    margin: 28px auto 0;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #1D3633;
+}
+
+/* ===========================================================
+   Grid
+=========================================================== */
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+/* ===========================================================
+   Card
+=========================================================== */
+.why-card {
+    position: relative;
+    padding: 40px;
+    border-radius: 28px;
+    background: #F8FAFB;
+    border: 1px solid rgba(0, 0, 0, .05);
+    transition: .35s ease;
+    overflow: hidden;
+}
+
+.why-card.large {
+    min-height: 360px;
+}
+
+.why-card:not(.large) {
+    min-height: 300px;
+}
+
+.why-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+            rgba(25, 197, 178, .08),
+            transparent 65%);
+    opacity: 0;
+    transition: .35s;
+}
+
+.why-card:hover {
+    transform: translateY(-12px);
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, .10);
+}
+
+.why-card:hover::before {
+    opacity: 1;
+}
+
+.why-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 22px;
+    background: linear-gradient(135deg,
+            #0F9E90,
+            #19C5B2);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    transition: .35s;
+}
+
+.why-card:hover .why-icon {
+    transform: rotate(-8deg) scale(1.08);
+}
+
+.why-card h3 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 18px;
+}
+
+.why-card p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #1D3633;
+}
+
+/* ===========================================================
+   Background Glow
+=========================================================== */
+.why-section::before {
+    content: "";
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    right: -250px;
+    top: -250px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            rgba(25, 197, 178, .08),
+            transparent 70%);
+    pointer-events: none;
+}
+
+.why-section::after {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: -180px;
+    bottom: -220px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            rgba(15, 158, 144, .06),
+            transparent 70%);
+    pointer-events: none;
+}
+
+/* ===========================================================
+   Tablet
+=========================================================== */
+@media(max-width:1100px) {
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .why-card.large {
+        min-height: 320px;
+    }
+}
+
+/* ===========================================================
+   Mobile
+=========================================================== */
+@media(max-width:768px) {
+    .why-section {
+        padding: 90px 0;
+    }
+
+    .why-header {
+        margin-bottom: 60px;
+    }
+
+    .why-header h2 {
+        font-size: 42px;
+    }
+
+    .why-header p {
+        font-size: 16px;
+    }
+
+    .why-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .why-card,
+    .why-card.large {
+        min-height: auto;
+        padding: 30px;
+    }
+
+    .why-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        margin-bottom: 22px;
+    }
+
+    .why-card h3 {
+        font-size: 26px;
+    }
+
+    .why-card p {
+        font-size: 18px;
+        color: #1D3633;
+    }
+}

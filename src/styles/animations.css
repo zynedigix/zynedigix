@@ -1,0 +1,102 @@
+/* Animation Utilities */
+
+.fade-in {
+  animation: fadeIn var(--animation-normal) ease-in-out;
+}
+
+.fade-in-up {
+  animation: fadeInUp var(--animation-normal) ease-out;
+}
+
+.fade-in-down {
+  animation: fadeInDown var(--animation-normal) ease-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft var(--animation-normal) ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight var(--animation-normal) ease-out;
+}
+
+.scale-in {
+  animation: scaleIn var(--animation-normal) ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Transition Utilities */
+.transition-fast {
+  transition: all var(--animation-fast) ease-in-out;
+}
+
+.transition-normal {
+  transition: all var(--animation-normal) ease-in-out;
+}
+
+.transition-slow {
+  transition: all var(--animation-slow) ease-in-out;
+}

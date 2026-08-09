@@ -1,0 +1,331 @@
+/* =========================================================
+   ZyneDigix Services Section
+   Horizontal Accordion Experience
+   ========================================================= */
+.services-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 120px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 20%,
+      rgba(120, 120, 255, 0.08),
+      transparent 45%),
+    #050507;
+}
+/* ---------------------------------------------------------
+   Header
+--------------------------------------------------------- */
+.services-header {
+  width: min(1200px, 90%);
+  margin: 0 auto 70px;
+  text-align: center;
+}
+.services-eyebrow {
+  display: inline-block;
+  margin-bottom: 18px;
+  font-size: 12px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #0F9E90;
+}
+.services-title {
+  font-size: clamp(42px,
+      6vw,
+      82px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  background:
+    linear-gradient(120deg,
+      #ffffff,
+      #a9a9ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.services-description {
+  max-width: 700px;
+  margin: 30px auto 0;
+  font-size: 18px;
+  line-height: 1.7;
+  color:
+    rgba(255, 255, 255, 0.55);
+}
+/* ---------------------------------------------------------
+   Accordion Wrapper
+--------------------------------------------------------- */
+.services-accordion {
+  width: min(1400px,
+      100%);
+  max-width: min(1400px, 92vw);
+  height: 520px;
+  margin: auto;
+  display: flex;
+  gap: 18px;
+  perspective: 1200px;
+}
+/* ---------------------------------------------------------
+   Individual Card
+--------------------------------------------------------- */
+.service-card {
+  position: relative;
+  flex: 1;
+  min-width: 90px;
+  overflow: hidden;
+  border-radius: 32px;
+  cursor: pointer;
+  background:
+    linear-gradient(145deg,
+      rgba(255, 255, 255, 0.08),
+      rgba(255, 255, 255, 0.02));
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter:
+    blur(30px);
+  transition:
+    flex 0.8s cubic-bezier(.16,
+      1,
+      .3,
+      1),
+    transform .5s ease,
+    border-color .4s ease;
+  box-shadow:
+    inset 0 0 40px rgba(255, 255, 255, 0.03),
+    0 30px 80px rgba(0, 0, 0, .4);
+}
+/* Hover inactive cards */
+.service-card:hover {
+  transform:
+    translateY(-10px);
+  border-color:
+    rgba(255, 255, 255, .3);
+}
+/* Active expanded card */
+.service-card.active {
+  flex:
+    5;
+  border-color:
+    rgba(255, 255, 255, .35);
+  transform:
+    translateY(-15px) scale(1.02);
+  background-image:
+    radial-gradient(circle at 50% 24%, rgba(120, 120, 255, .25), transparent 54%),
+    linear-gradient(145deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+  background-size: cover;
+  background-position: center;
+}
+/* ---------------------------------------------------------
+   Background Image / Glow
+--------------------------------------------------------- */
+.service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 30%,
+      rgba(150, 150, 255, .25),
+      transparent 60%);
+  opacity: 0;
+  transition:
+    opacity .6s ease;
+}
+.service-card.active::before {
+  opacity: 1;
+}
+/* ---------------------------------------------------------
+   Card Inner
+--------------------------------------------------------- */
+.service-content {
+  position: absolute;
+  inset: 0;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 2;
+}
+/* collapsed card alignment */
+.service-card:not(.active) .service-content {
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+/* Number */
+.service-number {
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color:
+    rgba(255, 255, 255, .45);
+}
+/* Icon */
+.service-icon {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  background:
+    rgba(255, 255, 255, .08);
+  font-size: 32px;
+  opacity: 1;
+  transform:
+    translateY(0);
+  transition:
+    all .6s ease;
+}
+.service-card.active .service-icon {
+  display: none;
+  opacity: 0;
+  transform:
+    translateY(0);
+}
+/* Title */
+.service-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2DD4BF;
+  margin: 0;
+  writing-mode: vertical-rl;
+  transform:
+    rotate(180deg);
+  white-space: nowrap;
+  transition:
+    all .6s cubic-bezier(.16,
+      1,
+      .3,
+      1);
+}
+/* collapsed title positioning */
+.service-card:not(.active) .service-title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:
+    translate(-50%, -50%) rotate(180deg);
+}
+.service-card.active .service-title {
+  writing-mode:
+    horizontal-tb;
+  transform: none;
+  position: relative;
+  font-size: 42px;
+  margin-bottom: 18px;
+}
+.service-card:not(.active) .service-icon {
+  display: flex;
+  opacity: 0.9;
+}
+/* Description */
+.service-text {
+  max-width: 420px;
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 1.7;
+  opacity: 0;
+  transform:
+    translateY(30px);
+  transition:
+    all .6s ease .15s;
+}
+.service-card.active .service-text {
+  opacity: 1;
+  transform:
+    translateY(0);
+}
+/* ---------------------------------------------------------
+   Floating Glow
+--------------------------------------------------------- */
+.service-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  right: -120px;
+  bottom: -120px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle,
+      rgba(120, 120, 255, .4),
+      transparent 70%);
+  filter:
+    blur(40px);
+  opacity: 0;
+  transition:
+    opacity .6s ease;
+}
+.service-card.active .service-glow {
+  opacity: 1;
+}
+/* ---------------------------------------------------------
+   Mobile Responsive
+--------------------------------------------------------- */
+@media(max-width:900px) {
+  .services-section {
+    padding:
+      80px 0;
+  }
+  .services-header {
+    width: min(1200px, calc(100% - 32px));
+  }
+  .services-accordion {
+    width: min(100%, calc(100vw - 32px));
+    max-width: 100%;
+    height: auto;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+    padding-inline: 0;
+  }
+  .service-card,
+  .service-card.active {
+    flex: none;
+    width: 100%;
+    height: 100px;
+    min-height: 100px;
+    transform: none;
+    margin: 0;
+  }
+  .service-card.active {
+    height: 420px;
+  }
+  .service-card:not(.active) .service-title {
+    writing-mode: horizontal-tb;
+    transform: none;
+    rotate: 0deg;
+  }
+  .service-title {
+    writing-mode:
+      horizontal-tb;
+    transform: none;
+    font-size: 26px;
+  }
+  .service-card.active .service-title {
+    font-size: 34px;
+  }
+  .service-content {
+    padding: 30px;
+  }
+}
+/* ---------------------------------------------------------
+   Small Mobile
+--------------------------------------------------------- */
+@media(max-width:480px) {
+  .services-title {
+    font-size: 42px;
+  }
+  .services-description {
+    font-size: 15px;
+  }
+  .service-card.active {
+    height: 380px;
+  }
+  .service-title {
+    font-size: 22px;
+  }
+}

@@ -1,0 +1,205 @@
+/* ===========================================================
+   CTA SECTION
+=========================================================== */
+.cta-section {
+    position: relative;
+    overflow: hidden;
+    padding: 150px 20px;
+    background:
+        linear-gradient(135deg,
+            #08131F 0%,
+            #10263B 45%,
+            #0F9E90 100%);
+}
+
+/* ===========================================================
+   BACKGROUND GLOWS
+=========================================================== */
+.cta-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    animation: floatGlow 10s ease-in-out infinite;
+}
+
+.glow-1 {
+    width: 420px;
+    height: 420px;
+    background: rgba(25, 197, 178, .25);
+    top: -120px;
+    left: -100px;
+}
+
+.glow-2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(0, 150, 255, .15);
+    right: -120px;
+    bottom: -150px;
+    animation-delay: 2s;
+}
+
+@keyframes floatGlow {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-25px);
+    }
+}
+
+/* ===========================================================
+   CONTAINER
+=========================================================== */
+.cta-container {
+    position: relative;
+    z-index: 2;
+    width: min(900px, 92%);
+    margin: auto;
+    text-align: center;
+}
+
+/* ===========================================================
+   LABEL
+=========================================================== */
+.cta-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .15);
+    color: #19C5B2;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 26px;
+    backdrop-filter: blur(15px);
+}
+
+/* ===========================================================
+   TITLE
+=========================================================== */
+.cta-container h2 {
+    color: #ffffff;
+    font-size: clamp(48px, 6vw, 76px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+/* ===========================================================
+   DESCRIPTION
+=========================================================== */
+.cta-container p {
+    max-width: 760px;
+    margin: auto;
+    color: rgba(255, 255, 255, .82);
+    font-size: 20px;
+    line-height: 1.9;
+    margin-bottom: 55px;
+}
+
+/* ===========================================================
+   BUTTON
+=========================================================== */
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 38px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg,
+            #19C5B2,
+            #0F9E90);
+    box-shadow:
+        0 18px 45px rgba(25, 197, 178, .35);
+    transition: all .35s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 28px 70px rgba(25, 197, 178, .45);
+}
+
+.cta-button svg {
+    transition: transform .35s ease;
+}
+
+.cta-button:hover svg {
+    transform: translateX(6px);
+}
+
+/* ===========================================================
+   TABLET
+=========================================================== */
+@media(max-width:1024px) {
+    .cta-section {
+        padding: 120px 20px;
+    }
+
+    .cta-container p {
+        font-size: 18px;
+    }
+}
+
+/* ===========================================================
+   MOBILE
+=========================================================== */
+@media(max-width:768px) {
+    .cta-section {
+        padding: 90px 20px;
+    }
+
+    .cta-container h2 {
+        font-size: 42px;
+    }
+
+    .cta-container p {
+        font-size: 16px;
+        line-height: 1.8;
+        margin-bottom: 40px;
+    }
+
+    .cta-button {
+        width: 100%;
+        justify-content: center;
+        padding: 18px 24px;
+        font-size: 17px;
+    }
+
+    .glow-1 {
+        width: 280px;
+        height: 280px;
+    }
+
+    .glow-2 {
+        width: 320px;
+        height: 320px;
+    }
+}
+
+/* ===========================================================
+   LARGE DESKTOP
+=========================================================== */
+@media(min-width:1600px) {
+    .cta-container {
+        max-width: 980px;
+    }
+
+    .cta-container h2 {
+        font-size: 82px;
+    }
+}

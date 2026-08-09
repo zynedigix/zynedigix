@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@import "./styles/fonts.css";
+@import "./styles/variables.css";
+@import "./styles/typography.css";
+@import "./styles/globals.css";
+@import "./styles/navigation.css";
+@import "./styles/animations.css";
+@import "./styles/sections.css";

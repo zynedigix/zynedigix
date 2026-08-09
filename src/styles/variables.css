@@ -1,0 +1,49 @@
+:root {
+  /* Brand Colors */
+  --color-ocean-teal: #14B8A6;
+  --color-ocean-teal-hover: #0F9E90;
+  --color-ocean-teal-light: #D9F6F2;
+  --color-gradient-end: #2DD4BF;
+  --color-dark-graphite: #202726;
+  --color-secondary-text: #5F6B6A;
+  --color-muted: #8B9493;
+  --color-disabled: #BEC8C7;
+  --color-white: #FFFFFF;
+  --color-background: #FFFFFF;
+  --color-section: #F8FAFA;
+  --color-alternate: #F2F5F5;
+  --color-glass: rgba(255, 255, 255, 0.70);
+  --color-border: rgba(32, 39, 38, 0.08);
+
+  /* Border Radius */
+  --radius-button: 14px;
+  --radius-image: 20px;
+  --radius-card: 24px;
+  --radius-glass: 28px;
+
+  /* Container */
+  --container-max: 1440px;
+  --content-width: 1280px;
+  --grid-columns: 12;
+
+  /* Section Padding */
+  --section-padding-desktop: 120px;
+  --section-padding-tablet: 96px;
+  --section-padding-mobile: 72px;
+
+  /* Horizontal page padding */
+  --page-padding-desktop: 48px;
+  --page-padding-laptop: 32px;
+  --page-padding-tablet: 24px;
+  --page-padding-mobile: 20px;
+
+  /* Animation */
+  --animation-fast: 0.2s;
+  --animation-normal: 0.35s;
+  --animation-slow: 0.6s;
+
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(32, 39, 38, 0.04);
+  --shadow-medium: 0 4px 16px rgba(32, 39, 38, 0.08);
+  --shadow-large: 0 8px 32px rgba(32, 39, 38, 0.12);
+}

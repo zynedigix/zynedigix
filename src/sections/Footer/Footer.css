@@ -1,0 +1,220 @@
+.footer {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  color: white;
+}
+
+
+/* Background Energy Glow */
+
+.footer::before {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  top: -250px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 240, 255, 0.12);
+  filter: blur(160px);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+
+/* CTA Glass Panel */
+
+.footer-cta {
+  border: 1px solid rgba(255,255,255,0.1);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.08),
+      rgba(255,255,255,0.02)
+    );
+
+  backdrop-filter: blur(20px);
+
+  border-radius: 32px;
+
+  padding: 60px 40px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+.footer-cta::after {
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(0,240,255,0.18),
+      transparent 40%
+    );
+
+  pointer-events:none;
+
+}
+
+
+
+/* Brand */
+
+.footer-brand {
+
+  font-size: 2rem;
+
+  font-weight:700;
+
+  letter-spacing:-0.03em;
+
+}
+
+
+.footer-description {
+
+  color:rgba(255,255,255,0.6);
+
+  line-height:1.8;
+
+  max-width:420px;
+
+}
+
+
+
+/* Contact Items */
+
+.footer-contact-item {
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+  color:rgba(255,255,255,0.7);
+
+  transition:0.3s ease;
+
+}
+
+
+.footer-contact-item:hover {
+
+  color:#00eaff;
+
+}
+
+
+
+/* Social Buttons */
+
+.footer-social {
+
+  width:44px;
+
+  height:44px;
+
+  border-radius:50%;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border:1px solid rgba(255,255,255,0.12);
+
+  background:rgba(255,255,255,0.05);
+
+  transition:
+    transform .3s ease,
+    border-color .3s ease,
+    color .3s ease;
+
+}
+
+
+.footer-social:hover {
+
+  transform:translateY(-5px);
+
+  border-color:#00eaff;
+
+  color:#00eaff;
+
+}
+
+
+
+/* Footer Links */
+
+
+.footer-link {
+
+  color:rgba(255,255,255,0.65);
+
+  transition:all .3s ease;
+
+}
+
+
+.footer-link:hover {
+
+  color:#00eaff;
+
+  transform:translateX(5px);
+
+}
+
+
+
+/* Bottom Divider */
+
+.footer-bottom {
+
+  border-top:
+
+    1px solid rgba(255,255,255,0.1);
+
+  padding-top:30px;
+
+  margin-top:60px;
+
+  color:rgba(255,255,255,0.4);
+
+}
+
+
+
+/* Responsive */
+
+
+@media(max-width:768px){
+
+  .footer-cta{
+
+    padding:40px 24px;
+
+    border-radius:24px;
+
+  }
+
+
+  .footer-brand{
+
+    font-size:1.8rem;
+
+  }
+
+}
