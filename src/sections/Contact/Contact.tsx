@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -7,7 +7,9 @@ import {
   Clock,
   Send,
   Check,
+  X,
 } from "lucide-react";
+
 import {
   FaInstagram,
   FaYoutube,
@@ -17,6 +19,7 @@ import {
 } from "react-icons/fa6";
 
 import "./Contact.css";
+
 import {
   contactInfo,
   services,
@@ -24,20 +27,12 @@ import {
   projectTimelines,
 } from "./ContactData";
 
-type FormData = {
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  service: string;
-  timeline: string;
-  message: string;
-};
-
-type FormErrors = Record<string, string>;
-
 export default function Contact() {
-  const [formData, setFormData] = useState<FormData>({
+  // ============================================================
+  // FORM STATE
+  // ============================================================
+
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
@@ -47,10 +42,19 @@ export default function Contact() {
     message: "",
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+
   const [submitError, setSubmitError] = useState("");
+
+  // IMPORTANT:
+  // This controls the actual centered modal.
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // ============================================================
+  // ICON HELPER
+  // ============================================================
 
   const getIcon = (name: string) => {
     switch (name) {
@@ -74,18 +78,28 @@ export default function Contact() {
     }
   };
 
+  // ============================================================
+  // FORM VALIDATION
+  // ============================================================
+
   const validate = () => {
-    const newErrors: FormErrors = {};
+    const newErrors: Record<string, string> = {};
 
     if (formData.name.trim().length < 3) {
       newErrors.name = "Please enter your full name.";
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        formData.email.trim()
+      )
+    ) {
       newErrors.email = "Please enter a valid email address.";
     }
 
-    if (!/^[6-9]\d{9}$/.test(formData.phone.replace(/\D/g, ""))) {
+    const cleanPhone = formData.phone.replace(/\D/g, "");
+
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
       newErrors.phone = "Please enter a valid mobile number.";
     }
 
@@ -94,13 +108,18 @@ export default function Contact() {
     }
 
     if (formData.message.trim().length < 20) {
-      newErrors.message = "Please enter at least 20 characters.";
+      newErrors.message =
+        "Please enter at least 20 characters.";
     }
 
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
   };
+
+  // ============================================================
+  // INPUT CHANGE
+  // ============================================================
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -109,56 +128,75 @@ export default function Contact() {
   ) => {
     const { name, value } = e.target;
 
-    setFormData((previous) => ({
-      ...previous,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }));
 
     if (errors[name]) {
-      setErrors((previous) => ({
-        ...previous,
+      setErrors((prev) => ({
+        ...prev,
         [name]: "",
       }));
     }
 
+    // Clear server error when user starts editing again
     if (submitError) {
       setSubmitError("");
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // ============================================================
+  // FORM SUBMIT
+  // ============================================================
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
-    if (isSubmitting) {
-      return;
-    }
-
-    setSubmitError("");
-
+    // Validate form first
     if (!validate()) {
       return;
     }
 
-    try {
-      setIsSubmitting(true);
+    setIsSubmitting(true);
+    setSubmitError("");
 
+    try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          company: formData.company.trim(),
+          service: formData.service,
+          timeline: formData.timeline,
+          message: formData.message.trim(),
+        }),
       });
 
-      const result = await response.json().catch(() => null);
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          result?.message ||
-            "Unable to send your message. Please try again."
+          data?.error ||
+            "Something went wrong. Please try again."
         );
       }
 
+      // ========================================================
+      // SUCCESS
+      // ========================================================
+
+      // This opens the CENTERED MODAL.
+      setShowSuccessModal(true);
+
+      // Reset form
       setFormData({
         name: "",
         email: "",
@@ -170,335 +208,568 @@ export default function Contact() {
       });
 
       setErrors({});
-      setShowSuccess(true);
     } catch (error) {
-      console.error("Contact form submission error:", error);
+      console.error("Contact form error:", error);
 
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "Something went wrong. Please try again."
+          : "Unable to send your message. Please try again."
       );
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // ============================================================
+  // CLOSE SUCCESS MODAL
+  // ============================================================
+
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+  };
+
+  // ============================================================
+  // CONTACT ICONS
+  // ============================================================
+
+  const getContactIcon = (type: string) => {
+    switch (type) {
+      case "email":
+      case "Email":
+        return <Mail />;
+
+      case "phone":
+      case "Phone":
+        return <Phone />;
+
+      case "location":
+      case "Location":
+        return <MapPin />;
+
+      case "clock":
+      case "Clock":
+        return <Clock />;
+
+      default:
+        return <Mail />;
+    }
+  };
+
+  // ============================================================
+  // RENDER
+  // ============================================================
+
   return (
     <>
-      <section className="contact-section" id="contact">
+      <section
+        id="contact"
+        className="contact-section"
+      >
         <div className="contact-container">
-          {/* =====================================================
-              LEFT PANEL
-          ====================================================== */}
+
+          {/* ==================================================
+              LEFT SIDE
+          ================================================== */}
+
           <motion.div
             className="contact-left"
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+            initial={{
+              opacity: 0,
+              x: -60,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.7,
+            }}
           >
-            <span className="contact-label">GET IN TOUCH</span>
-
-            <h2>
-              Let&apos;s Build
-              <br />
-              Something
-              <br />
-              <span>Exceptional.</span>
-            </h2>
-
-            <p>
-              Have an idea, project, or digital experience in mind?
-              Let&apos;s talk about how we can turn it into something
-              meaningful, memorable, and built for impact.
-            </p>
-
-            <div className="contact-info">
-              <a
-                href={`mailto:${contactInfo.email}`}
-                className="contact-item"
-              >
-                <Mail size={22} />
-                <span>{contactInfo.email}</span>
-              </a>
-
-              <a
-                href={`tel:${contactInfo.phone.replace(/\s/g, "")}`}
-                className="contact-item"
-              >
-                <Phone size={22} />
-                <span>{contactInfo.phone}</span>
-              </a>
-
-              <a
-                href={`https://wa.me/${contactInfo.whatsapp.replace(
-                  /\D/g,
-                  ""
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                className="contact-item"
-              >
-                <FaWhatsapp size={22} />
-                <span>{contactInfo.whatsapp}</span>
-              </a>
-
-              <div className="contact-item">
-                <MapPin size={22} />
-                <span>{contactInfo.location}</span>
-              </div>
-
-              <div className="contact-item">
-                <Clock size={22} />
-                <span>{contactInfo.availability}</span>
-              </div>
+            <div className="contact-eyebrow">
+              GET IN TOUCH
             </div>
 
+            <h2 className="contact-title">
+              Let's Build Something
+              <span> Extraordinary.</span>
+            </h2>
+
+            <p className="contact-description">
+              Have a project in mind? Tell us about it.
+              Whether you need a premium website, SaaS
+              product, AI experience, or an immersive 3D
+              digital experience, we'd love to hear from you.
+            </p>
+
+            {/* CONTACT INFORMATION */}
+
+            <div className="contact-info-list">
+              {Array.isArray(contactInfo) &&
+                contactInfo.map(
+                  (item: any, index: number) => (
+                    <div
+                      className="contact-info-item"
+                      key={item.id || index}
+                    >
+                      <div className="contact-info-icon">
+                        {getContactIcon(
+                          item.type ||
+                            item.icon ||
+                            ""
+                        )}
+                      </div>
+
+                      <div className="contact-info-content">
+                        {item.label && (
+                          <span className="contact-info-label">
+                            {item.label}
+                          </span>
+                        )}
+
+                        <span className="contact-info-value">
+                          {item.value ||
+                            item.text ||
+                            ""}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                )}
+            </div>
+
+            {/* SOCIAL LINKS */}
+
             <div className="contact-socials">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.name}
-                >
-                  {getIcon(social.name)}
-                </a>
-              ))}
+              {Array.isArray(socialLinks) &&
+                socialLinks.map(
+                  (social: any, index: number) => (
+                    <a
+                      key={social.name || index}
+                      href={social.url || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={
+                        social.name ||
+                        "Social media"
+                      }
+                      className="contact-social-link"
+                    >
+                      {getIcon(
+                        social.name ||
+                          social.platform ||
+                          ""
+                      )}
+                    </a>
+                  )
+                )}
             </div>
           </motion.div>
 
-          {/* =====================================================
-              RIGHT PANEL
-          ====================================================== */}
+          {/* ==================================================
+              RIGHT SIDE — FORM
+          ================================================== */}
+
           <motion.div
             className="contact-right"
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15 }}
+            initial={{
+              opacity: 0,
+              x: 60,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.7,
+              delay: 0.15,
+            }}
           >
-            <form
-              className="contact-form"
-              onSubmit={handleSubmit}
-              noValidate
-            >
-              <div className="form-grid">
-                {/* NAME */}
-                <div className="form-group">
-                  <label htmlFor="name">Full Name *</label>
+            <div className="contact-form-card">
 
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your full name"
-                    autoComplete="name"
-                    className={errors.name ? "error-border" : ""}
-                  />
+              <div className="contact-form-header">
+                <span className="contact-form-eyebrow">
+                  START A PROJECT
+                </span>
 
-                  {errors.name && (
-                    <span className="error">{errors.name}</span>
-                  )}
-                </div>
+                <h3>
+                  Tell us about your project
+                </h3>
 
-                {/* EMAIL */}
-                <div className="form-group">
-                  <label htmlFor="email">Email Address *</label>
-
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    autoComplete="email"
-                    className={errors.email ? "error-border" : ""}
-                  />
-
-                  {errors.email && (
-                    <span className="error">{errors.email}</span>
-                  )}
-                </div>
-
-                {/* PHONE */}
-                <div className="form-group">
-                  <label htmlFor="phone">Mobile Number *</label>
-
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="10-digit mobile number"
-                    autoComplete="tel"
-                    inputMode="numeric"
-                    className={errors.phone ? "error-border" : ""}
-                  />
-
-                  {errors.phone && (
-                    <span className="error">{errors.phone}</span>
-                  )}
-                </div>
-
-                {/* COMPANY */}
-                <div className="form-group">
-                  <label htmlFor="company">Company / Brand</label>
-
-                  <input
-                    id="company"
-                    name="company"
-                    type="text"
-                    value={formData.company}
-                    onChange={handleChange}
-                    placeholder="Company or brand name"
-                    autoComplete="organization"
-                  />
-                </div>
-
-                {/* SERVICE */}
-                <div className="form-group select-group">
-                  <label htmlFor="service">What do you need? *</label>
-
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    className={errors.service ? "error-border" : ""}
-                  >
-                    <option value="">Select a service</option>
-
-                    {services.map((service) => (
-                      <option key={service} value={service}>
-                        {service}
-                      </option>
-                    ))}
-                  </select>
-
-                  {errors.service && (
-                    <span className="error">{errors.service}</span>
-                  )}
-                </div>
-
-                {/* TIMELINE */}
-                <div className="form-group select-group">
-                  <label htmlFor="timeline">Project Timeline</label>
-
-                  <select
-                    id="timeline"
-                    name="timeline"
-                    value={formData.timeline}
-                    onChange={handleChange}
-                  >
-                    {projectTimelines.map((timeline) => (
-                      <option key={timeline} value={timeline}>
-                        {timeline}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <p>
+                  Fill out the form below and we'll
+                  get back to you shortly.
+                </p>
               </div>
 
-              {/* MESSAGE */}
-              <div className="form-group">
-                <label htmlFor="message">Tell us about your project *</label>
-
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Tell us about your idea, goals, requirements, budget, or anything else that would help us understand your project."
-                  className={errors.message ? "error-border" : ""}
-                />
-
-                {errors.message && (
-                  <span className="error">{errors.message}</span>
-                )}
-              </div>
-
-              {/* SERVER ERROR */}
-              {submitError && (
-                <div
-                  role="alert"
-                  style={{
-                    marginTop: "16px",
-                    color: "#ef4444",
-                    fontSize: "14px",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {submitError}
-                </div>
-              )}
-
-              {/* SUBMIT */}
-              <button
-                type="submit"
-                className="contact-submit"
-                disabled={isSubmitting}
-                aria-busy={isSubmitting}
+              <form
+                onSubmit={handleSubmit}
+                noValidate
               >
-                {isSubmitting ? (
-                  <>
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Send Message</span>
-                    <Send size={19} />
-                  </>
+
+                {/* NAME + EMAIL */}
+
+                <div className="contact-form-row">
+
+                  <div className="contact-form-group">
+                    <label htmlFor="name">
+                      Full Name *
+                    </label>
+
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Your full name"
+                      autoComplete="name"
+                    />
+
+                    {errors.name && (
+                      <span className="form-error">
+                        {errors.name}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="contact-form-group">
+                    <label htmlFor="email">
+                      Email Address *
+                    </label>
+
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="you@example.com"
+                      autoComplete="email"
+                    />
+
+                    {errors.email && (
+                      <span className="form-error">
+                        {errors.email}
+                      </span>
+                    )}
+                  </div>
+
+                </div>
+
+                {/* PHONE + COMPANY */}
+
+                <div className="contact-form-row">
+
+                  <div className="contact-form-group">
+                    <label htmlFor="phone">
+                      Phone Number *
+                    </label>
+
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="9876543210"
+                      autoComplete="tel"
+                    />
+
+                    {errors.phone && (
+                      <span className="form-error">
+                        {errors.phone}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="contact-form-group">
+                    <label htmlFor="company">
+                      Company
+                    </label>
+
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      value={formData.company}
+                      onChange={handleChange}
+                      placeholder="Company name"
+                      autoComplete="organization"
+                    />
+                  </div>
+
+                </div>
+
+                {/* SERVICE + TIMELINE */}
+
+                <div className="contact-form-row">
+
+                  <div className="contact-form-group">
+                    <label htmlFor="service">
+                      Service *
+                    </label>
+
+                    <select
+                      id="service"
+                      name="service"
+                      value={formData.service}
+                      onChange={handleChange}
+                    >
+                      <option value="">
+                        Select a service
+                      </option>
+
+                      {Array.isArray(services) &&
+                        services.map(
+                          (
+                            service: any,
+                            index: number
+                          ) => (
+                            <option
+                              key={
+                                service.id ||
+                                index
+                              }
+                              value={
+                                typeof service ===
+                                "string"
+                                  ? service
+                                  : service.name ||
+                                    service.title ||
+                                    ""
+                              }
+                            >
+                              {typeof service ===
+                              "string"
+                                ? service
+                                : service.name ||
+                                  service.title ||
+                                  ""}
+                            </option>
+                          )
+                        )}
+                    </select>
+
+                    {errors.service && (
+                      <span className="form-error">
+                        {errors.service}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="contact-form-group">
+                    <label htmlFor="timeline">
+                      Project Timeline
+                    </label>
+
+                    <select
+                      id="timeline"
+                      name="timeline"
+                      value={formData.timeline}
+                      onChange={handleChange}
+                    >
+                      {Array.isArray(
+                        projectTimelines
+                      ) &&
+                        projectTimelines.map(
+                          (
+                            timeline: any,
+                            index: number
+                          ) => (
+                            <option
+                              key={index}
+                              value={
+                                typeof timeline ===
+                                "string"
+                                  ? timeline
+                                  : timeline.name ||
+                                    timeline.label ||
+                                    timeline.title ||
+                                    ""
+                              }
+                            >
+                              {typeof timeline ===
+                              "string"
+                                ? timeline
+                                : timeline.name ||
+                                  timeline.label ||
+                                  timeline.title ||
+                                  ""}
+                            </option>
+                          )
+                        )}
+                    </select>
+                  </div>
+
+                </div>
+
+                {/* MESSAGE */}
+
+                <div className="contact-form-group">
+                  <label htmlFor="message">
+                    Project Details *
+                  </label>
+
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={6}
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your project, goals, budget, or anything else you'd like us to know..."
+                  />
+
+                  {errors.message && (
+                    <span className="form-error">
+                      {errors.message}
+                    </span>
+                  )}
+                </div>
+
+                {/* SERVER ERROR */}
+
+                {submitError && (
+                  <div className="submit-error">
+                    {submitError}
+                  </div>
                 )}
-              </button>
-            </form>
+
+                {/* SUBMIT BUTTON */}
+
+                <button
+                  type="submit"
+                  className="contact-submit-button"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="button-spinner" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send size={18} />
+                    </>
+                  )}
+                </button>
+
+              </form>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* =========================================================
+      {/* ======================================================
           SUCCESS MODAL
-      ========================================================== */}
-      {showSuccess && (
-        <div
-          className="success-overlay"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="contact-success-title"
-        >
+
+          IMPORTANT:
+          This is OUTSIDE contact-left/contact-right.
+
+          position: fixed in CSS makes it appear in the
+          center of the entire browser viewport.
+      ====================================================== */}
+
+      <AnimatePresence>
+        {showSuccessModal && (
           <motion.div
-            className="success-modal"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            className="success-modal-overlay"
+            initial={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            transition={{
+              duration: 0.25,
+            }}
+            onClick={closeSuccessModal}
           >
-            <div className="success-icon">
-              <Check size={36} strokeWidth={3} />
-            </div>
-
-            <h3 id="contact-success-title">Thank You!</h3>
-
-            <p>
-              Your message has been sent successfully. We&apos;ll review
-              your enquiry and get back to you soon.
-            </p>
-
-            <button
-              type="button"
-              className="success-btn"
-              onClick={() => setShowSuccess(false)}
+            <motion.div
+              className="success-modal"
+              initial={{
+                opacity: 0,
+                scale: 0.85,
+                y: 30,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.9,
+                y: 20,
+              }}
+              transition={{
+                duration: 0.35,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              onClick={(e) =>
+                e.stopPropagation()
+              }
             >
-              Close
-            </button>
+
+              {/* CLOSE BUTTON */}
+
+              <button
+                type="button"
+                className="success-modal-close"
+                onClick={closeSuccessModal}
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+
+              {/* SUCCESS ICON */}
+
+              <div className="success-modal-icon">
+                <Check size={38} strokeWidth={2.5} />
+              </div>
+
+              {/* TITLE */}
+
+              <h3>
+                Thank You!
+              </h3>
+
+              {/* MESSAGE */}
+
+              <p>
+                Your message has been sent
+                successfully.
+                <br />
+                We'll review your enquiry and
+                get back to you soon.
+              </p>
+
+              {/* CLOSE BUTTON */}
+
+              <button
+                type="button"
+                className="success-modal-button"
+                onClick={closeSuccessModal}
+              >
+                Close
+              </button>
+
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </>
   );
 }
