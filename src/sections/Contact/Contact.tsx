@@ -27,12 +27,30 @@ import {
   projectTimelines,
 } from "./ContactData";
 
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  service: string;
+  timeline: string;
+  message: string;
+};
+
+type FormErrors = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  service?: string;
+  message?: string;
+};
+
 export default function Contact() {
   // ============================================================
   // FORM STATE
   // ============================================================
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     phone: "",
@@ -42,21 +60,23 @@ export default function Contact() {
     message: "",
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [submitError, setSubmitError] = useState("");
 
-  // IMPORTANT:
-  // This controls the actual centered modal.
+  // ============================================================
+  // SUCCESS MODAL
+  // ============================================================
+
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // ============================================================
-  // ICON HELPER
+  // SOCIAL ICON HELPER
   // ============================================================
 
-  const getIcon = (name: string) => {
+  const getSocialIcon = (name: string) => {
     switch (name) {
       case "Instagram":
         return <FaInstagram />;
@@ -79,16 +99,44 @@ export default function Contact() {
   };
 
   // ============================================================
-  // FORM VALIDATION
+  // CONTACT ICON HELPER
   // ============================================================
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
+  const getContactIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "email":
+        return <Mail size={22} />;
 
+      case "phone":
+        return <Phone size={22} />;
+
+      case "whatsapp":
+        return <FaWhatsapp size={22} />;
+
+      case "location":
+        return <MapPin size={22} />;
+
+      case "clock":
+        return <Clock size={22} />;
+
+      default:
+        return <Mail size={22} />;
+    }
+  };
+
+  // ============================================================
+  // VALIDATION
+  // ============================================================
+
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    // NAME
     if (formData.name.trim().length < 3) {
       newErrors.name = "Please enter your full name.";
     }
 
+    // EMAIL
     if (
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
         formData.email.trim()
@@ -97,16 +145,20 @@ export default function Contact() {
       newErrors.email = "Please enter a valid email address.";
     }
 
+    // PHONE
     const cleanPhone = formData.phone.replace(/\D/g, "");
 
     if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
-      newErrors.phone = "Please enter a valid mobile number.";
+      newErrors.phone =
+        "Please enter a valid 10-digit mobile number.";
     }
 
+    // SERVICE
     if (!formData.service) {
       newErrors.service = "Please select a service.";
     }
 
+    // MESSAGE
     if (formData.message.trim().length < 20) {
       newErrors.message =
         "Please enter at least 20 characters.";
@@ -118,36 +170,39 @@ export default function Contact() {
   };
 
   // ============================================================
-  // INPUT CHANGE
+  // HANDLE INPUT CHANGE
   // ============================================================
 
   const handleChange = (
     e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      HTMLInputElement |
+        HTMLTextAreaElement |
+        HTMLSelectElement
     >
   ) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
+    setFormData((previous) => ({
+      ...previous,
       [name]: value,
     }));
 
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
+    // Clear field error
+    if (errors[name as keyof FormErrors]) {
+      setErrors((previous) => ({
+        ...previous,
         [name]: "",
       }));
     }
 
-    // Clear server error when user starts editing again
+    // Clear server error
     if (submitError) {
       setSubmitError("");
     }
   };
 
   // ============================================================
-  // FORM SUBMIT
+  // HANDLE FORM SUBMIT
   // ============================================================
 
   const handleSubmit = async (
@@ -155,15 +210,25 @@ export default function Contact() {
   ) => {
     e.preventDefault();
 
-    // Validate form first
+    // Prevent double submit
+    if (isSubmitting) {
+      return;
+    }
+
+    setSubmitError("");
+
+    // Validate
     if (!validate()) {
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmitError("");
-
     try {
+      setIsSubmitting(true);
+
+      // ========================================================
+      // SEND TO VERCEL API
+      // ========================================================
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
@@ -180,12 +245,17 @@ export default function Contact() {
         }),
       });
 
-      const data = await response.json();
+      const result = await response.json().catch(() => null);
+
+      // ========================================================
+      // API ERROR
+      // ========================================================
 
       if (!response.ok) {
         throw new Error(
-          data?.error ||
-            "Something went wrong. Please try again."
+          result?.error ||
+            result?.message ||
+            "Unable to send your message. Please try again."
         );
       }
 
@@ -193,7 +263,7 @@ export default function Contact() {
       // SUCCESS
       // ========================================================
 
-      // This opens the CENTERED MODAL.
+      // Open centered modal
       setShowSuccessModal(true);
 
       // Reset form
@@ -207,14 +277,18 @@ export default function Contact() {
         message: "",
       });
 
+      // Clear validation errors
       setErrors({});
     } catch (error) {
-      console.error("Contact form error:", error);
+      console.error(
+        "Contact form submission error:",
+        error
+      );
 
       setSubmitError(
         error instanceof Error
           ? error.message
-          : "Unable to send your message. Please try again."
+          : "Something went wrong. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -230,38 +304,15 @@ export default function Contact() {
   };
 
   // ============================================================
-  // CONTACT ICONS
-  // ============================================================
-
-  const getContactIcon = (type: string) => {
-    switch (type) {
-      case "email":
-      case "Email":
-        return <Mail />;
-
-      case "phone":
-      case "Phone":
-        return <Phone />;
-
-      case "location":
-      case "Location":
-        return <MapPin />;
-
-      case "clock":
-      case "Clock":
-        return <Clock />;
-
-      default:
-        return <Mail />;
-    }
-  };
-
-  // ============================================================
   // RENDER
   // ============================================================
 
   return (
     <>
+      {/* ========================================================
+          CONTACT SECTION
+      ======================================================== */}
+
       <section
         id="contact"
         className="contact-section"
@@ -288,16 +339,27 @@ export default function Contact() {
             }}
             transition={{
               duration: 0.7,
+              ease: [0.22, 1, 0.36, 1],
             }}
           >
-            <div className="contact-eyebrow">
+
+            {/* EYEBROW */}
+
+            <div className="contact-label">
               GET IN TOUCH
             </div>
 
+            {/* TITLE */}
+
             <h2 className="contact-title">
-              Let's Build Something
-              <span> Extraordinary.</span>
+              Let's Build
+              <br />
+              Something
+              <br />
+              <span>Extraordinary.</span>
             </h2>
+
+            {/* DESCRIPTION */}
 
             <p className="contact-description">
               Have a project in mind? Tell us about it.
@@ -306,72 +368,115 @@ export default function Contact() {
               digital experience, we'd love to hear from you.
             </p>
 
-            {/* CONTACT INFORMATION */}
+            {/* ==================================================
+                CONTACT INFORMATION
+            ================================================== */}
 
-            <div className="contact-info-list">
-              {Array.isArray(contactInfo) &&
-                contactInfo.map(
-                  (item: any, index: number) => (
-                    <div
-                      className="contact-info-item"
-                      key={item.id || index}
-                    >
-                      <div className="contact-info-icon">
-                        {getContactIcon(
-                          item.type ||
-                            item.icon ||
-                            ""
-                        )}
-                      </div>
+            <div className="contact-info">
 
-                      <div className="contact-info-content">
-                        {item.label && (
-                          <span className="contact-info-label">
-                            {item.label}
-                          </span>
-                        )}
+              {/* EMAIL */}
 
-                        <span className="contact-info-value">
-                          {item.value ||
-                            item.text ||
-                            ""}
-                        </span>
-                      </div>
-                    </div>
-                  )
-                )}
+              <a
+                href={`mailto:${contactInfo.email}`}
+                className="contact-item"
+              >
+                <div className="contact-item-icon">
+                  <Mail size={22} />
+                </div>
+
+                <span>
+                  {contactInfo.email}
+                </span>
+              </a>
+
+              {/* PHONE */}
+
+              <a
+                href={`tel:${contactInfo.phone.replace(
+                  /\s/g,
+                  ""
+                )}`}
+                className="contact-item"
+              >
+                <div className="contact-item-icon">
+                  <Phone size={22} />
+                </div>
+
+                <span>
+                  {contactInfo.phone}
+                </span>
+              </a>
+
+              {/* WHATSAPP */}
+
+              <a
+                href={`https://wa.me/${contactInfo.whatsapp.replace(
+                  /\D/g,
+                  ""
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-item"
+              >
+                <div className="contact-item-icon">
+                  <FaWhatsapp size={22} />
+                </div>
+
+                <span>
+                  {contactInfo.whatsapp}
+                </span>
+              </a>
+
+              {/* LOCATION */}
+
+              <div className="contact-item">
+                <div className="contact-item-icon">
+                  <MapPin size={22} />
+                </div>
+
+                <span>
+                  {contactInfo.location}
+                </span>
+              </div>
+
+              {/* AVAILABILITY */}
+
+              <div className="contact-item">
+                <div className="contact-item-icon">
+                  <Clock size={22} />
+                </div>
+
+                <span>
+                  {contactInfo.availability}
+                </span>
+              </div>
+
             </div>
 
-            {/* SOCIAL LINKS */}
+            {/* ==================================================
+                SOCIAL LINKS
+            ================================================== */}
 
             <div className="contact-socials">
-              {Array.isArray(socialLinks) &&
-                socialLinks.map(
-                  (social: any, index: number) => (
-                    <a
-                      key={social.name || index}
-                      href={social.url || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={
-                        social.name ||
-                        "Social media"
-                      }
-                      className="contact-social-link"
-                    >
-                      {getIcon(
-                        social.name ||
-                          social.platform ||
-                          ""
-                      )}
-                    </a>
-                  )
-                )}
+
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                >
+                  {getSocialIcon(social.name)}
+                </a>
+              ))}
+
             </div>
+
           </motion.div>
 
           {/* ==================================================
-              RIGHT SIDE — FORM
+              RIGHT SIDE — CONTACT FORM
           ================================================== */}
 
           <motion.div
@@ -391,185 +496,247 @@ export default function Contact() {
             transition={{
               duration: 0.7,
               delay: 0.15,
+              ease: [0.22, 1, 0.36, 1],
             }}
           >
-            <div className="contact-form-card">
 
-              <div className="contact-form-header">
-                <span className="contact-form-eyebrow">
-                  START A PROJECT
-                </span>
+            <div className="contact-form-header">
 
-                <h3>
-                  Tell us about your project
-                </h3>
+              <span className="contact-form-eyebrow">
+                START A PROJECT
+              </span>
 
-                <p>
-                  Fill out the form below and we'll
-                  get back to you shortly.
-                </p>
+              <h3>
+                Tell us about your project
+              </h3>
+
+              <p>
+                Fill out the form below and we'll get
+                back to you shortly.
+              </p>
+
+            </div>
+
+            {/* ==================================================
+                FORM
+            ================================================== */}
+
+            <form
+              className="contact-form"
+              onSubmit={handleSubmit}
+              noValidate
+            >
+
+              {/* ==================================================
+                  NAME + EMAIL
+              ================================================== */}
+
+              <div className="contact-form-row">
+
+                {/* NAME */}
+
+                <div className="contact-form-group">
+
+                  <label htmlFor="name">
+                    Full Name *
+                  </label>
+
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your full name"
+                    autoComplete="name"
+                    className={
+                      errors.name
+                        ? "error-border"
+                        : ""
+                    }
+                  />
+
+                  {errors.name && (
+                    <span className="form-error">
+                      {errors.name}
+                    </span>
+                  )}
+
+                </div>
+
+                {/* EMAIL */}
+
+                <div className="contact-form-group">
+
+                  <label htmlFor="email">
+                    Email Address *
+                  </label>
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    className={
+                      errors.email
+                        ? "error-border"
+                        : ""
+                    }
+                  />
+
+                  {errors.email && (
+                    <span className="form-error">
+                      {errors.email}
+                    </span>
+                  )}
+
+                </div>
+
               </div>
 
-              <form
-                onSubmit={handleSubmit}
-                noValidate
-              >
+              {/* ==================================================
+                  PHONE + COMPANY
+              ================================================== */}
 
-                {/* NAME + EMAIL */}
+              <div className="contact-form-row">
 
-                <div className="contact-form-row">
+                {/* PHONE */}
 
-                  <div className="contact-form-group">
-                    <label htmlFor="name">
-                      Full Name *
-                    </label>
+                <div className="contact-form-group">
 
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your full name"
-                      autoComplete="name"
-                    />
+                  <label htmlFor="phone">
+                    Mobile Number *
+                  </label>
 
-                    {errors.name && (
-                      <span className="form-error">
-                        {errors.name}
-                      </span>
-                    )}
-                  </div>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="9876543210"
+                    autoComplete="tel"
+                    inputMode="numeric"
+                    className={
+                      errors.phone
+                        ? "error-border"
+                        : ""
+                    }
+                  />
 
-                  <div className="contact-form-group">
-                    <label htmlFor="email">
-                      Email Address *
-                    </label>
-
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="you@example.com"
-                      autoComplete="email"
-                    />
-
-                    {errors.email && (
-                      <span className="form-error">
-                        {errors.email}
-                      </span>
-                    )}
-                  </div>
+                  {errors.phone && (
+                    <span className="form-error">
+                      {errors.phone}
+                    </span>
+                  )}
 
                 </div>
 
-                {/* PHONE + COMPANY */}
+                {/* COMPANY */}
 
-                <div className="contact-form-row">
+                <div className="contact-form-group">
 
-                  <div className="contact-form-group">
-                    <label htmlFor="phone">
-                      Phone Number *
-                    </label>
+                  <label htmlFor="company">
+                    Company
+                  </label>
 
-                    <input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="9876543210"
-                      autoComplete="tel"
-                    />
-
-                    {errors.phone && (
-                      <span className="form-error">
-                        {errors.phone}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="contact-form-group">
-                    <label htmlFor="company">
-                      Company
-                    </label>
-
-                    <input
-                      id="company"
-                      name="company"
-                      type="text"
-                      value={formData.company}
-                      onChange={handleChange}
-                      placeholder="Company name"
-                      autoComplete="organization"
-                    />
-                  </div>
+                  <input
+                    id="company"
+                    name="company"
+                    type="text"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Company name"
+                    autoComplete="organization"
+                  />
 
                 </div>
 
-                {/* SERVICE + TIMELINE */}
+              </div>
 
-                <div className="contact-form-row">
+              {/* ==================================================
+                  SERVICE + TIMELINE
+              ================================================== */}
 
-                  <div className="contact-form-group">
-                    <label htmlFor="service">
-                      Service *
-                    </label>
+              <div className="contact-form-row">
+
+                {/* SERVICE */}
+
+                <div className="contact-form-group">
+
+                  <label htmlFor="service">
+                    Service *
+                  </label>
+
+                  <div className="select-wrapper">
 
                     <select
                       id="service"
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
+                      className={
+                        errors.service
+                          ? "error-border"
+                          : ""
+                      }
                     >
+
                       <option value="">
                         Select a service
                       </option>
 
-                      {Array.isArray(services) &&
-                        services.map(
-                          (
-                            service: any,
-                            index: number
-                          ) => (
+                      {services.map(
+                        (
+                          service: any,
+                          index: number
+                        ) => {
+
+                          const value =
+                            typeof service === "string"
+                              ? service
+                              : service.name ||
+                                service.title ||
+                                "";
+
+                          return (
                             <option
                               key={
                                 service.id ||
                                 index
                               }
-                              value={
-                                typeof service ===
-                                "string"
-                                  ? service
-                                  : service.name ||
-                                    service.title ||
-                                    ""
-                              }
+                              value={value}
                             >
-                              {typeof service ===
-                              "string"
-                                ? service
-                                : service.name ||
-                                  service.title ||
-                                  ""}
+                              {value}
                             </option>
-                          )
-                        )}
+                          );
+                        }
+                      )}
+
                     </select>
 
-                    {errors.service && (
-                      <span className="form-error">
-                        {errors.service}
-                      </span>
-                    )}
                   </div>
 
-                  <div className="contact-form-group">
-                    <label htmlFor="timeline">
-                      Project Timeline
-                    </label>
+                  {errors.service && (
+                    <span className="form-error">
+                      {errors.service}
+                    </span>
+                  )}
+
+                </div>
+
+                {/* TIMELINE */}
+
+                <div className="contact-form-group">
+
+                  <label htmlFor="timeline">
+                    Project Timeline
+                  </label>
+
+                  <div className="select-wrapper">
 
                     <select
                       id="timeline"
@@ -577,112 +744,135 @@ export default function Contact() {
                       value={formData.timeline}
                       onChange={handleChange}
                     >
-                      {Array.isArray(
-                        projectTimelines
-                      ) &&
-                        projectTimelines.map(
-                          (
-                            timeline: any,
-                            index: number
-                          ) => (
+
+                      {projectTimelines.map(
+                        (
+                          timeline: any,
+                          index: number
+                        ) => {
+
+                          const value =
+                            typeof timeline ===
+                            "string"
+                              ? timeline
+                              : timeline.name ||
+                                timeline.label ||
+                                timeline.title ||
+                                "";
+
+                          return (
                             <option
                               key={index}
-                              value={
-                                typeof timeline ===
-                                "string"
-                                  ? timeline
-                                  : timeline.name ||
-                                    timeline.label ||
-                                    timeline.title ||
-                                    ""
-                              }
+                              value={value}
                             >
-                              {typeof timeline ===
-                              "string"
-                                ? timeline
-                                : timeline.name ||
-                                  timeline.label ||
-                                  timeline.title ||
-                                  ""}
+                              {value}
                             </option>
-                          )
-                        )}
+                          );
+                        }
+                      )}
+
                     </select>
+
                   </div>
 
                 </div>
 
-                {/* MESSAGE */}
+              </div>
 
-                <div className="contact-form-group">
-                  <label htmlFor="message">
-                    Project Details *
-                  </label>
+              {/* ==================================================
+                  MESSAGE
+              ================================================== */}
 
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={6}
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tell us about your project, goals, budget, or anything else you'd like us to know..."
-                  />
+              <div className="contact-form-group">
 
-                  {errors.message && (
-                    <span className="form-error">
-                      {errors.message}
-                    </span>
-                  )}
-                </div>
+                <label htmlFor="message">
+                  Project Details *
+                </label>
 
-                {/* SERVER ERROR */}
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={6}
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Tell us about your project, goals, budget, or anything else you'd like us to know..."
+                  className={
+                    errors.message
+                      ? "error-border"
+                      : ""
+                  }
+                />
 
-                {submitError && (
-                  <div className="submit-error">
-                    {submitError}
-                  </div>
+                {errors.message && (
+                  <span className="form-error">
+                    {errors.message}
+                  </span>
                 )}
 
-                {/* SUBMIT BUTTON */}
+              </div>
 
-                <button
-                  type="submit"
-                  className="contact-submit-button"
-                  disabled={isSubmitting}
+              {/* ==================================================
+                  SERVER ERROR
+              ================================================== */}
+
+              {submitError && (
+                <div
+                  className="submit-error"
+                  role="alert"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <span className="button-spinner" />
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      Send Message
-                      <Send size={18} />
-                    </>
-                  )}
-                </button>
+                  {submitError}
+                </div>
+              )}
 
-              </form>
-            </div>
+              {/* ==================================================
+                  SUBMIT BUTTON
+              ================================================== */}
+
+              <button
+                type="submit"
+                className="contact-submit-button"
+                disabled={isSubmitting}
+                aria-busy={isSubmitting}
+              >
+
+                {isSubmitting ? (
+                  <>
+                    <span className="button-spinner" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <Send size={18} />
+                  </>
+                )}
+
+              </button>
+
+            </form>
+
           </motion.div>
+
         </div>
       </section>
 
-      {/* ======================================================
+      {/* ========================================================
           SUCCESS MODAL
-
+          
           IMPORTANT:
-          This is OUTSIDE contact-left/contact-right.
-
-          position: fixed in CSS makes it appear in the
-          center of the entire browser viewport.
-      ====================================================== */}
+          This is completely OUTSIDE the contact grid.
+          It will therefore appear over the entire viewport.
+      ======================================================== */}
 
       <AnimatePresence>
+
         {showSuccessModal && (
+
           <motion.div
             className="success-modal-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="success-modal-title"
             initial={{
               opacity: 0,
             }}
@@ -697,6 +887,7 @@ export default function Contact() {
             }}
             onClick={closeSuccessModal}
           >
+
             <motion.div
               className="success-modal"
               initial={{
@@ -718,18 +909,18 @@ export default function Contact() {
                 duration: 0.35,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              onClick={(e) =>
-                e.stopPropagation()
-              }
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
             >
 
-              {/* CLOSE BUTTON */}
+              {/* CLOSE X */}
 
               <button
                 type="button"
                 className="success-modal-close"
                 onClick={closeSuccessModal}
-                aria-label="Close"
+                aria-label="Close success message"
               >
                 <X size={20} />
               </button>
@@ -737,12 +928,15 @@ export default function Contact() {
               {/* SUCCESS ICON */}
 
               <div className="success-modal-icon">
-                <Check size={38} strokeWidth={2.5} />
+                <Check
+                  size={40}
+                  strokeWidth={2.5}
+                />
               </div>
 
               {/* TITLE */}
 
-              <h3>
+              <h3 id="success-modal-title">
                 Thank You!
               </h3>
 
@@ -767,8 +961,11 @@ export default function Contact() {
               </button>
 
             </motion.div>
+
           </motion.div>
+
         )}
+
       </AnimatePresence>
     </>
   );
