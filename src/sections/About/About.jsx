@@ -27,7 +27,7 @@ export default function About() {
             </p>
 
             <div className="mt-12 grid grid-cols-2 gap-6">
-              <div className="rounded-3xl border border-black/5 p-6">
+              <div className="rounded-3xl border border-black/10 p-6">
                 <h3 className="text-xl font-bold text-[#111111]">
                   Premium UI/UX
                 </h3>
@@ -37,7 +37,7 @@ export default function About() {
                 </p>
               </div>
 
-              <div className="rounded-3xl border border-black/5 p-6">
+              <div className="rounded-3xl border border-black/10 p-6">
                 <h3 className="text-xl font-bold text-[#111111]">
                   Interactive 3D
                 </h3>
@@ -47,7 +47,7 @@ export default function About() {
                 </p>
               </div>
 
-              <div className="rounded-3xl border border-black/5 p-6">
+              <div className="rounded-3xl border border-black/10 p-6">
                 <h3 className="text-xl font-bold text-[#111111]">
                   AI Solutions
                 </h3>
@@ -57,7 +57,7 @@ export default function About() {
                 </p>
               </div>
 
-              <div className="rounded-3xl border border-black/5 p-6">
+              <div className="rounded-3xl border border-black/10 p-6">
                 <h3 className="text-xl font-bold text-[#111111]">
                   Performance
                 </h3>

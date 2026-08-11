@@ -12,8 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   </React.StrictMode>
 );
 
-// Remove the inline preloader added in index.html once the app mounts.
-function removePreloader() {
+function hidePreloader() {
   try {
     const p = document.getElementById("preloader");
     if (!p) return;
@@ -26,10 +25,11 @@ function removePreloader() {
   }
 }
 
-// Run removal on next tick so the UI has a chance to paint
-requestAnimationFrame(() => {
-  setTimeout(removePreloader, 50);
-});
+window.addEventListener("app-ready", hidePreloader, { once: true });
+
+// Fallback: if the app doesn't send a ready event, remove the preloader after 12 seconds.
+const fallbackTimer = window.setTimeout(hidePreloader, 12000);
+window.addEventListener("app-ready", () => window.clearTimeout(fallbackTimer), { once: true });
 
 // Register service worker in production to enable basic caching and faster repeat loads
 if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {

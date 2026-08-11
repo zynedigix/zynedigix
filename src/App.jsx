@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
@@ -42,16 +42,6 @@ function HomePage() {
     finalFrameIndex,
   } = useHeroPreloader();
 
-  const [showGlobalLoader, setShowGlobalLoader] = useState(() => {
-    if (typeof window === "undefined") {
-      return true;
-    }
-
-    return (
-      window.sessionStorage.getItem(PRELOAD_STORAGE_KEY) !== "1"
-    );
-  });
-
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
@@ -71,16 +61,23 @@ function HomePage() {
       return;
     }
 
-    // If fully ready or we've loaded a small initial portion, show the site.
-    const SHOW_THRESHOLD = 15; // percent: show after ~15% of frames are loaded
-    if (isReady || loadedPercentage >= SHOW_THRESHOLD) {
-      try {
-        window.sessionStorage.setItem(PRELOAD_STORAGE_KEY, "1");
-      } catch (e) {}
+    const preloader = document.getElementById("preloader");
+    const progressFill = preloader?.querySelector(".preloader-barFill");
+    const progressText = preloader?.querySelector(".preloader-percent");
+    const percent = Math.max(1, Math.min(100, loadedPercentage));
 
-      setShowGlobalLoader(false);
+    if (progressFill) {
+      progressFill.style.width = `${percent}%`;
     }
-  }, [isReady, loadedPercentage]);
+
+    if (progressText) {
+      progressText.textContent = `${String(percent).padStart(2, "0")} %`;
+    }
+
+    if (isReady) {
+      window.dispatchEvent(new Event("app-ready"));
+    }
+  }, [loadedPercentage, isReady]);
 
   return (
     <>
@@ -90,42 +87,8 @@ function HomePage() {
         path={"/"}
         image={"https://zyne.online/og-image.jpg"}
       />
-      {/* =====================================================
-          GLOBAL LOADER
-      ===================================================== */}
-
-      {showGlobalLoader && !isReady && (
-        <div
-          className="global-loader"
-          aria-live="polite"
-          aria-label="Website loading"
-        >
-          <div className="global-loader__inner">
-
-            <span className="global-loader__brand">
-              ZyneDigix
-            </span>
-
-            <span className="global-loader__label">
-              Loading Experience
-            </span>
-
-            <span className="global-loader__bar">
-              <span
-                className="global-loader__barFill"
-                style={{
-                  width: `${loadedPercentage}%`,
-                }}
-              />
-            </span>
-
-            <span className="global-loader__count">
-              {String(loadedPercentage).padStart(2, "0")}%
-            </span>
-
-          </div>
-        </div>
-      )}
+      {/* The initial preloader in index.html handles loading progress.
+          The app remains hidden behind that overlay until the page is ready. */}
 
       {/* =====================================================
           MAIN WEBSITE
