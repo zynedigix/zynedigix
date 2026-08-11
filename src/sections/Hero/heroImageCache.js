@@ -1,14 +1,25 @@
 const IMAGE_COUNT = 286;
 const FRAME_TEMPLATE = "zynedigix-hero-";
 
-const SEQUENCES = {
-  desktop: "/assets/images/hero_images/",
-  mobile: "/assets/images/hero_mobile/",
-};
+// Dynamically import images using Vite's glob
+const desktopImages = import.meta.glob("../../assets/images/hero_images/*.jpg", {
+  eager: true,
+  import: "default",
+});
+const mobileImages = import.meta.glob("../../assets/images/hero_mobile/*.jpg", {
+  eager: true,
+  import: "default",
+});
 
-function getFramePath(sequenceBase, frameNumber) {
+function getFramePath(sequence, frameNumber) {
   const paddedFrame = String(frameNumber).padStart(4, "0");
-  return `${sequenceBase}${FRAME_TEMPLATE}${paddedFrame}.jpg`;
+  const filename = `${FRAME_TEMPLATE}${paddedFrame}.jpg`;
+
+  const globMap = sequence === "desktop" ? desktopImages : mobileImages;
+  const basePath = sequence === "desktop" ? "../../assets/images/hero_images/" : "../../assets/images/hero_mobile/";
+  const key = basePath + filename;
+
+  return globMap[key] || null;
 }
 
 const cache = {
@@ -45,7 +56,7 @@ function selectSequenceByWidth(width) {
 }
 
 function preloadSequence(sequence, onProgress) {
-  if (!SEQUENCES[sequence]) {
+  if (sequence !== "desktop" && sequence !== "mobile") {
     return Promise.reject(new Error("Unknown sequence"));
   }
 
@@ -90,9 +101,20 @@ function preloadSequence(sequence, onProgress) {
     if (promises[index]) return promises[index];
 
     const p = new Promise((resolve) => {
+      const framePath = getFramePath(sequence, index + 1);
+      
+      if (!framePath) {
+        // Frame path not found
+        images[index] = null;
+        failed += 1;
+        reportProgress();
+        resolve(null);
+        return;
+      }
+
       const img = new Image();
       img.decoding = "async";
-      img.src = getFramePath(SEQUENCES[sequence], index + 1);
+      img.src = framePath;
 
       img.onload = () => {
         images[index] = img;
