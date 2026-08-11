@@ -2,13 +2,13 @@ const IMAGE_COUNT = 286;
 const FRAME_TEMPLATE = "zynedigix-hero-";
 
 const SEQUENCES = {
-  desktop: "../../assets/images/hero_images/",
-  mobile: "../../assets/images/hero_mobile/",
+  desktop: "/assets/images/hero_images/",
+  mobile: "/assets/images/hero_mobile/",
 };
 
 function getFramePath(sequenceBase, frameNumber) {
   const paddedFrame = String(frameNumber).padStart(4, "0");
-  return new URL(`${sequenceBase}${FRAME_TEMPLATE}${paddedFrame}.jpg`, import.meta.url).href;
+  return `${sequenceBase}${FRAME_TEMPLATE}${paddedFrame}.jpg`;
 }
 
 const cache = {
