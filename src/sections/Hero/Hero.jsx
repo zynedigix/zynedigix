@@ -131,15 +131,23 @@ export default function Hero({ images, loadedPercentage, isReady, finalFrameInde
   }, [images]);
 
   useEffect(() => {
-    if (!images.length || images.length < FRAME_COUNT) {
-      return undefined;
+    if (!images || !images.length) return undefined;
+
+    // Find the last loaded frame index and draw it so users see progress
+    let lastLoaded = -1;
+    for (let i = images.length - 1; i >= 0; i--) {
+      if (images[i]) {
+        lastLoaded = i;
+        break;
+      }
     }
 
-    const frame = images[0];
+    const idxToDraw = lastLoaded >= 0 ? lastLoaded : 0;
 
+    const frame = images[idxToDraw];
     if (frame) {
-      frameRef.current = 0;
-      drawFrame(0, true);
+      frameRef.current = idxToDraw;
+      drawFrame(idxToDraw, true);
     }
 
     return undefined;

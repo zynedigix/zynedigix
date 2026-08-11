@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import { Navbar } from "./components/navigation";
+import Seo from "./components/Seo/Seo";
 
 import Hero from "./sections/Hero";
 import About from "./sections/About";
@@ -21,8 +22,11 @@ import useHeroPreloader from "./sections/Hero/useHeroPreloader";
 
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
+import PortfolioPage from "./pages/Portfolio/PortfolioPage";
+import ProjectPage from "./pages/Portfolio/ProjectPage";
 
 import "./styles/globals.css";
+import seo from "./config/seo";
 
 const PRELOAD_STORAGE_KEY = "zynedigix_preloaded_v1";
 
@@ -67,37 +71,25 @@ function HomePage() {
       return;
     }
 
-    if (isReady) {
-      window.sessionStorage.setItem(
-        PRELOAD_STORAGE_KEY,
-        "1"
-      );
+    // If fully ready or we've loaded a small initial portion, show the site.
+    const SHOW_THRESHOLD = 15; // percent: show after ~15% of frames are loaded
+    if (isReady || loadedPercentage >= SHOW_THRESHOLD) {
+      try {
+        window.sessionStorage.setItem(PRELOAD_STORAGE_KEY, "1");
+      } catch (e) {}
 
       setShowGlobalLoader(false);
     }
-  }, [isReady]);
+  }, [isReady, loadedPercentage]);
 
   return (
     <>
-      <Helmet>
-        <title>ZyneDigix — AI‑Powered Interactive 3D Digital Experience Studio</title>
-        <meta name="description" content="ZyneDigix builds AI-powered interactive 3D websites, immersive digital experiences, and conversion-focused web products for businesses and startups." />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://zyne.online/og-image.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta name="twitter:image" content="https://zyne.online/og-image.jpg" />
-        <link rel="canonical" href="https://zyne.online/" />
-
-        <script type="application/ld+json">{`{
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "ZyneDigix",
-          "url": "https://zyne.online/"
-        }`}</script>
-      </Helmet>
+      <Seo
+        title={"ZyneDigix — AI-Powered Interactive 3D Digital Experience Studio"}
+        description={"AI-powered websites, immersive 3D experiences, UX/UI, SaaS product design, AI UGC marketing and digital growth solutions by ZyneDigix."}
+        path={"/"}
+        image={"https://zyne.online/og-image.jpg"}
+      />
       {/* =====================================================
           GLOBAL LOADER
       ===================================================== */}
@@ -254,6 +246,16 @@ function AppRoutes() {
       <Route
         path="/"
         element={<HomePage />}
+      />
+
+      <Route
+        path="/portfolio"
+        element={<PortfolioPage />}
+      />
+
+      <Route
+        path="/portfolio/:slug"
+        element={<ProjectPage />}
       />
 
       {/* ===================================================

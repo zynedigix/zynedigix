@@ -5,8 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>zynedigix</title>
+    <meta name="description" content="ZyneDigix — AI-powered interactive 3D websites, SaaS products and immersive brand experiences." />
+    <meta name="keywords" content="AI website, 3D web, WebGL, SaaS UX, UX design, interactive experiences, ZyneDigix" />
+    <meta name="theme-color" content="#0F9E90" />
+    <style>
+      /* Minimal preloader styles shown immediately before JS mounts */
+      #preloader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#ffffff,#f7f7f7);z-index:9999}
+      #preloader .preloader-inner{display:flex;flex-direction:column;align-items:center;gap:12px}
+      #preloader .brand{font-weight:700;color:#0F9E90;font-size:20px}
+      #preloader .spinner{width:56px;height:56px;border-radius:50%;border:5px solid rgba(0,0,0,0.08);border-top-color:rgba(15,158,144,1);animation:spin 1s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+      .preloader--hidden{opacity:0;pointer-events:none;transition:opacity .32s ease}
+    </style>
   </head>
   <body>
+    <div id="preloader" aria-hidden="false">
+      <div class="preloader-inner">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="brand">ZyneDigix</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

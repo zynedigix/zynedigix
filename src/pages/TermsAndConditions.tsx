@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
+import Seo from "../components/Seo/Seo";
 import { FileText, ArrowLeft, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./LegalPages.css";
@@ -8,19 +9,11 @@ export default function TermsAndConditions() {
   return (
     <main className="legal-page">
 
-      <Helmet>
-        <title>Terms & Conditions — ZyneDigix</title>
-        <meta name="description" content="Terms and Conditions for using ZyneDigix services, including website use, project engagement, and service terms for AI-powered interactive digital experiences." />
-        <meta name="robots" content="index,follow" />
-        <meta property="og:title" content="Terms & Conditions — ZyneDigix" />
-        <meta property="og:description" content="Read the terms that govern the use of ZyneDigix AI-powered interactive 3D websites and digital services." />
-        <meta property="og:image" content="https://zyne.online/og-image.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta name="twitter:image" content="https://zyne.online/og-image.jpg" />
-        <link rel="canonical" href="https://zyne.online/terms-and-conditions" />
-      </Helmet>
+      <Seo
+        title="Terms & Conditions — ZyneDigix"
+        description="Terms and Conditions for using ZyneDigix services, including website use, project engagement, and service terms for AI-powered interactive digital experiences."
+        path="/terms-and-conditions"
+      />
 
       {/* HERO */}
       <section className="legal-hero">

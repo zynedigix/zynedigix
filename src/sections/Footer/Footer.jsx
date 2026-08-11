@@ -15,6 +15,7 @@ import {
 import { Link } from "react-router-dom";
 
 import "./Footer.css";
+import ZdLogo from "../../assets/images/zd-logo.svg";
 
 const footerLinks = {
   Services: [
@@ -184,7 +185,7 @@ export default function Footer() {
               font-bold
               tracking-wide
             ">
-              <img src="/src/assets/images/zd-logo.svg" /><br />
+              <img src={ZdLogo} alt="ZyneDigix logo" /><br />
               ZyneDigix
             </h3>
 

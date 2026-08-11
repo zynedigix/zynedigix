@@ -365,10 +365,9 @@
   }
   .service-card:not(.active) .service-title {
   position: absolute;
-  top: 30%;
-  left: 20%;
-  transform:
-    translate(-50%, -50%) rotate(180deg);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .service-card:not(.active) .service-content {

@@ -349,9 +349,13 @@
     }
     .portfolio-wrapper{
         width: min(100%, 420px);
-        padding-left: 0;
-        padding-right: 0;
+        padding-left: 20px; /* Add tablet left padding so first card isn't flush */
+        padding-right: 20px;
+        box-sizing: border-box;
         order: 1;
+    }
+    .portfolio-track{
+        padding-left:20px; /* ensure track has left inset so first card isn't flush */
     }
     .portfolio-track{
         gap:20px;
@@ -463,8 +467,12 @@
     }
     .portfolio-wrapper{
         width: 100%;
-        padding-left: 0;
-        padding-right: 0;
+        padding-left: 20px; /* Add left padding on small screens so first card isn't flush */
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+    .portfolio-track{
+        padding-left:20px;
     }
     .portfolio-card{
         flex:0 0 min(270px, 86vw);
@@ -493,10 +501,10 @@
         transform: none;
     }
     .portfolio-arrow.left {
-        left: 14px;
+        left: 0px;
     }
     .portfolio-arrow.right {
-        right: 14px;
+        right: 0px;
     }
 }
 /* ==========================================================

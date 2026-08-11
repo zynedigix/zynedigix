@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
+import Seo from "../components/Seo/Seo";
 import { ShieldCheck, ArrowLeft, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import "./LegalPages.css";
@@ -8,19 +9,11 @@ export default function PrivacyPolicy() {
   return (
     <main className="legal-page">
 
-      <Helmet>
-        <title>Privacy Policy — ZyneDigix</title>
-        <meta name="description" content="ZyneDigix Privacy Policy describing how we collect, use, and protect personal information when using our AI-powered digital experiences and services." />
-        <meta name="robots" content="index,follow" />
-        <meta property="og:title" content="Privacy Policy — ZyneDigix" />
-        <meta property="og:description" content="Learn how ZyneDigix handles personal data for our AI-powered interactive 3D websites and digital services." />
-        <meta property="og:image" content="https://zyne.online/og-image.jpg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta name="twitter:image" content="https://zyne.online/og-image.jpg" />
-        <link rel="canonical" href="https://zyne.online/privacy-policy" />
-      </Helmet>
+      <Seo
+        title="Privacy Policy — ZyneDigix"
+        description="ZyneDigix Privacy Policy describing how we collect, use, and protect personal information when using our AI-powered digital experiences and services."
+        path="/privacy-policy"
+      />
 
       {/* HERO */}
       <section className="legal-hero">

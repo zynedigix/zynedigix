@@ -11,73 +11,7 @@ import aurelixImage from "../../assets/images/portfolio/aurelix3d.jpg";
 import caFinanceImage from "../../assets/images/portfolio/ca-finance.jpg";
 import eshopImage from "../../assets/images/portfolio/eshop.jpg";
 import pyroshieldImage from "../../assets/images/portfolio/pyroshield.jpg";
-
-const projects = [
-  {
-    title: "Aatral Yoga",
-    category: "Wellness Website",
-    description:
-      "Premium yoga and wellness website featuring glassmorphism, immersive layouts and a calm user experience.",
-    image: aatralImage,
-    tags: [
-      "UI/UX",
-      "Website",
-      "Glassmorphism"
-    ]
-  },
-
-  {
-    title: "Aurelix 3D",
-    category: "Interactive 3D",
-    description:
-      "A cinematic WebGL experience showcasing immersive storytelling with premium 3D interactions.",
-    image: aurelixImage,
-    tags: [
-      "Three.js",
-      "React",
-      "GSAP"
-    ]
-  },
-
-  {
-    title: "CA Finance",
-    category: "Fintech",
-    description:
-      "A clean finance dashboard designed for trust, clarity and intelligent business analytics.",
-    image: caFinanceImage,
-    tags: [
-      "Dashboard",
-      "Fintech",
-      "SaaS"
-    ]
-  },
-
-  {
-    title: "E-Shop Computers",
-    category: "3D Ecommerce",
-    description:
-      "A premium ecommerce experience with immersive visuals and conversion-focused design.",
-    image: eshopImage,
-    tags: [
-      "Ecommerce",
-      "3D",
-      "React"
-    ]
-  },
-
-  {
-    title: "Pyroshield",
-    category: "Industrial",
-    description:
-      "Corporate website crafted for an industrial safety company with modern branding and UX.",
-    image: pyroshieldImage,
-    tags: [
-      "Corporate",
-      "Branding",
-      "Development"
-    ]
-  }
-];
+import projects from "../../data/portfolioData";
 
 const Portfolio = () => {
 
@@ -214,7 +148,7 @@ const Portfolio = () => {
 
                   <div className="tags">
 
-                    {project.tags.map((tag) => (
+                    {(Array.isArray(project.tags) ? project.tags : []).map((tag) => (
 
                       <span key={tag}>
                         {tag}
