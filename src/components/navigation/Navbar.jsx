@@ -1,6 +1,7 @@
 // src/components/navigation/Navbar.jsx
 
 import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Logo from "../../assets/images/zynedigix-logo.svg";
 
 import {
@@ -14,6 +15,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("#home");
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +58,17 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const showDarkNavbar = active !== "#home";
+  const showDarkNavbar = useMemo(() => {
+    // On any non-home route, always use the dark translucent blurred navbar.
+    if (location?.pathname && location.pathname !== "/") {
+      return true;
+    }
+
+    // On the home route, use the active section detection
+    // - when the `#home` hero is active -> transparent
+    // - otherwise -> dark translucent blurred
+    return active !== "#home";
+  }, [location?.pathname, active]);
 
   const navbarClass = useMemo(() => {
     return showDarkNavbar

@@ -37,19 +37,19 @@ export const projectTimelines = [
 export const socialLinks = [
   {
     name: "Instagram",
-    url: "https://instagram.com/royannexus.ai",
+    url: "https://instagram.com/zynedigix/",
   },
   {
     name: "X",
-    url: "https://x.com/",
+    url: "https://x.com/ZyneDigix/",
   },
   {
     name: "YouTube",
-    url: "https://www.youtube.com/@ZyneDigix",
+    url: "https://www.youtube.com/@zynedigix/",
   },
   {
     name: "LinkedIn",
-    url: "https://linkedin.com/",
+    url: "https://www.linkedin.com/company/zynedigix/ ",
   },
   {
   name: "WhatsApp",

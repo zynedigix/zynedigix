@@ -12,6 +12,7 @@ import {
   FaYoutube,
   FaXTwitter,
 } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 import "./Footer.css";
 
@@ -32,31 +33,31 @@ const footerLinks = {
     "Careers",
   ],
 
-  Resources: [
-    "Blog",
-    "AI Insights",
-    "Design Trends",
-    "Case Studies",
-    "Newsletter",
-  ],
+  // Resources: [
+  //   "Blog",
+  //   "AI Insights",
+  //   "Design Trends",
+  //   "Case Studies",
+  //   "Newsletter",
+  // ],
 };
 
 const socialLinks = [
   {
     icon: FaInstagram,
-    link: "#",
+    link: "https://instagram.com/zynedigix",
   },
   {
     icon: FaLinkedinIn,
-    link: "#",
+    link: "https://www.linkedin.com/company/zynedigix/",
   },
   {
     icon: FaYoutube,
-    link: "#",
+    link: "https://www.youtube.com/@zynedigix",
   },
   {
     icon: FaXTwitter,
-    link: "#",
+    link: "https://x.com/ZyneDigix",
   },
 ];
 
@@ -183,6 +184,7 @@ export default function Footer() {
               font-bold
               tracking-wide
             ">
+              <img src="/src/assets/images/zd-logo.svg" /><br />
               ZyneDigix
             </h3>
 
@@ -240,6 +242,9 @@ export default function Footer() {
                   <a
                     key={index}
                     href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.link}
                     className="
                       flex
                       h-11
@@ -343,13 +348,13 @@ export default function Footer() {
             flex
             gap-6
           ">
-            <a href="#">
+            <Link to="/privacy-policy">
               Privacy Policy
-            </a>
+            </Link>
 
-            <a href="#">
-              Terms
-            </a>
+            <Link to="/terms-and-conditions">
+              Terms & Conditions
+            </Link>
 
           </div>
 

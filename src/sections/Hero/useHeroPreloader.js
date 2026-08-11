@@ -1,90 +1,83 @@
 import { useState, useEffect, useRef } from "react";
-
-const IMAGE_COUNT = 286;
-const FRAME_TEMPLATE = "zynedigix-hero-";
-
-function getFrameAssetPath(frameNumber) {
-  const paddedFrame = String(frameNumber).padStart(4, "0");
-  return new URL(`../../assets/images/hero_images/${FRAME_TEMPLATE}${paddedFrame}.jpg`, import.meta.url).href;
-}
+import heroCache from "./heroImageCache";
 
 export default function useHeroPreloader() {
   const [loadedPercentage, setLoadedPercentage] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const imagesRef = useRef([]);
+  const sequenceRef = useRef(null);
 
   useEffect(() => {
-    if (imagesRef.current.length > 0) {
+    // If images already provided by cache for the active sequence, reuse.
+    const width = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const sequence = heroCache.selectSequenceByWidth(width);
+    sequenceRef.current = sequence;
+
+    const cached = heroCache.getCachedImages(sequence);
+
+    // If cached array contains loaded images, reuse them immediately
+    const hasAny = cached.some(Boolean);
+    if (hasAny) {
+      imagesRef.current = cached;
+      const loadedCount = cached.filter(Boolean).length;
+      setLoadedPercentage(Math.round((loadedCount / heroCache.IMAGE_COUNT) * 100));
+      setIsReady(loadedCount >= heroCache.IMAGE_COUNT && cached.every(Boolean));
+      // Kick off background preload for any missing frames
+      heroCache.preloadSequence(sequence, (p) => setLoadedPercentage(p)).then(({ images }) => {
+        imagesRef.current = images;
+        const allLoaded = images.every(Boolean);
+        setIsReady(allLoaded);
+      });
       return undefined;
     }
 
-    const totalFrames = IMAGE_COUNT;
-    const images = new Array(totalFrames).fill(null);
-    imagesRef.current = images;
+    // No cached frames — start preload
+    heroCache.preloadSequence(sequence, (p) => setLoadedPercentage(p)).then(({ images }) => {
+      imagesRef.current = images;
+      const allLoaded = images.every(Boolean);
+      setIsReady(allLoaded);
+    });
 
-    let loadedCount = 0;
-    let failedCount = 0;
-
-    const startLoad = (index) => {
-      if (index >= totalFrames) {
-        if (loadedCount >= totalFrames && failedCount === 0) {
-          setIsReady(true);
-        } else if (loadedCount >= totalFrames) {
-          setIsReady(false);
+    // listen for viewport category changes (desktop <-> mobile)
+    const handleResize = () => {
+      const newSeq = heroCache.selectSequenceByWidth(window.innerWidth);
+      if (newSeq !== sequenceRef.current) {
+        sequenceRef.current = newSeq;
+        const cachedNew = heroCache.getCachedImages(newSeq);
+        if (cachedNew.some(Boolean)) {
+          imagesRef.current = cachedNew;
+          const loadedCount = cachedNew.filter(Boolean).length;
+          setLoadedPercentage(Math.round((loadedCount / heroCache.IMAGE_COUNT) * 100));
+          setIsReady(loadedCount >= heroCache.IMAGE_COUNT && cachedNew.every(Boolean));
+        } else {
+          heroCache.preloadSequence(newSeq, (p) => setLoadedPercentage(p)).then(({ images }) => {
+            imagesRef.current = images;
+            const allLoaded = images.every(Boolean);
+            setIsReady(allLoaded);
+          });
         }
-        return;
       }
-
-      const image = new Image();
-      image.decoding = "async";
-      image.src = getFrameAssetPath(index + 1);
-
-      image.onload = () => {
-        images[index] = image;
-        loadedCount += 1;
-
-        const percent = Math.round((loadedCount / totalFrames) * 100);
-        setLoadedPercentage(Math.min(100, percent));
-
-        if (loadedCount >= totalFrames) {
-          const allLoaded = images.every(Boolean);
-          setIsReady(allLoaded);
-        }
-
-        if (index < totalFrames - 1) {
-          startLoad(index + 1);
-        }
-      };
-
-      image.onerror = () => {
-        images[index] = null;
-        failedCount += 1;
-        loadedCount += 1;
-
-        const percent = Math.round((loadedCount / totalFrames) * 100);
-        setLoadedPercentage(Math.min(100, percent));
-
-        if (loadedCount >= totalFrames) {
-          const allLoaded = images.every(Boolean);
-          setIsReady(allLoaded);
-        }
-
-        if (index < totalFrames - 1) {
-          startLoad(index + 1);
-        }
-      };
     };
 
-    startLoad(0);
+    let resizeTimer = null;
+    const debounced = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleResize, 200);
+    };
 
-    return undefined;
+    window.addEventListener("resize", debounced);
+
+    return () => {
+      window.removeEventListener("resize", debounced);
+      clearTimeout(resizeTimer);
+    };
   }, []);
 
   return {
     loadedPercentage,
     isReady,
     images: imagesRef.current,
-    totalFrames: IMAGE_COUNT,
-    finalFrameIndex: IMAGE_COUNT - 1,
+    totalFrames: heroCache.IMAGE_COUNT,
+    finalFrameIndex: heroCache.IMAGE_COUNT - 1,
   };
 }
