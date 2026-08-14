@@ -100,70 +100,68 @@ const Portfolio = () => {
 
           <div className="portfolio-track">
 
-            {projects.map((project, index) => (
+            {projects.map((project, index) => {
 
-              <motion.article
-                key={project.title}
-                className="portfolio-card"
-                initial={{
-                  opacity: 0,
-                  y: 80
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0
-                }}
-                transition={{
-                  duration: .7,
-                  delay: index * .12
-                }}
-                whileHover={{
-                  y: -12
-                }}
-                viewport={{ once: true }}
-              >
-            <div className="portfolio-image">
-                                <img
-                    src={project.image}
-                    alt={project.title}
-                    loading="lazy"
-                  />
+              const inner = (
+                <>
+                  <div className="portfolio-image">
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      loading="lazy"
+                    />
 
-                  <div className="image-overlay"></div>
-
-                </div>
-
-                <div className="portfolio-content">
-
-                  <span className="category">
-                    {project.category}
-                  </span>
-
-                  <h3>
-                    {project.title}
-                  </h3>
-
-                  <p>
-                    {project.description}
-                  </p>
-
-                  <div className="tags">
-
-                    {(Array.isArray(project.tags) ? project.tags : []).map((tag) => (
-
-                      <span key={tag}>
-                        {tag}
-                      </span>
-
-                    ))}
-
+                    <div className="image-overlay"></div>
                   </div>
 
-                </div>
+                  <div className="portfolio-content">
+                    <span className="category">{project.category}</span>
 
-              </motion.article>
+                    <h3>{project.title}</h3>
 
-            ))}
+                    <p>{project.description}</p>
+
+                    <div className="tags">
+                      {(Array.isArray(project.tags) ? project.tags : []).map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              );
+
+              return (
+                <motion.article
+                  key={project.title}
+                  className="portfolio-card"
+                  initial={{
+                    opacity: 0,
+                    y: 80
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0
+                  }}
+                  transition={{
+                    duration: .7,
+                    delay: index * .12
+                  }}
+                  whileHover={{
+                    y: -12
+                  }}
+                  viewport={{ once: true }}
+                >
+                  {project.url ? (
+                    <a href={project.url} target="_blank" rel="noopener noreferrer" className="portfolio-link">
+                      {inner}
+                    </a>
+                  ) : (
+                    inner
+                  )}
+                </motion.article>
+              );
+
+            })}
 
           </div>
 

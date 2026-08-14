@@ -13,6 +13,7 @@ const projects = [
     description:
       "Premium yoga and wellness website featuring glassmorphism, immersive layouts and a calm user experience.",
     image: aatralImage,
+    url: "https://aatralyoga.com/",
     tags: ["React", "UI/UX", "Wellness"],
   },
 
@@ -23,6 +24,7 @@ const projects = [
     description:
       "A cinematic WebGL experience showcasing immersive storytelling with premium 3D interactions.",
     image: aurelixImage,
+    url: "https://aurelix3d.vercel.app/",
     tags: ["Three.js", "WebGL", "Immersive"],
   },
 
@@ -33,6 +35,7 @@ const projects = [
     description:
       "A clean finance dashboard designed for trust, clarity and intelligent business analytics.",
     image: caFinanceImage,
+    url: "https://ca-sachin-associates.vercel.app/",
     tags: ["Dashboard", "Finance", "UX"],
   },
 
@@ -43,6 +46,7 @@ const projects = [
     description:
       "A premium ecommerce experience with immersive visuals and conversion-focused design.",
     image: eshopImage,
+    url: "https://eshop-computers.vercel.app/",
     tags: ["Ecommerce", "3D", "Conversion"],
   },
 
@@ -53,6 +57,7 @@ const projects = [
     description:
       "Corporate website crafted for an industrial safety company with modern branding and UX.",
     image: pyroshieldImage,
+    url: "https://pyroshield.vercel.app/",
     tags: ["Corporate", "Branding", "UX"],
   },
 
@@ -63,6 +68,7 @@ const projects = [
     description:
       "A modern 30-day wellness platform designed around personalized guidance, healthy habits, nutrition, movement, and progress tracking.",
     image: fitauraImage,
+    url: "https://fitaurahealth.vercel.app/",
     tags: ["Product Design", "UX/UI", "Wellness"],
   },
 ];
