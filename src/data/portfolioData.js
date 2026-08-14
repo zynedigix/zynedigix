@@ -3,6 +3,7 @@ import aurelixImage from "../assets/images/portfolio/aurelix3d.jpg";
 import caFinanceImage from "../assets/images/portfolio/ca-finance.jpg";
 import eshopImage from "../assets/images/portfolio/eshop.jpg";
 import pyroshieldImage from "../assets/images/portfolio/pyroshield.jpg";
+import fitauraImage from "../assets/images/portfolio/fitauro.jpg";
 
 const projects = [
   {
@@ -53,6 +54,16 @@ const projects = [
       "Corporate website crafted for an industrial safety company with modern branding and UX.",
     image: pyroshieldImage,
     tags: ["Corporate", "Branding", "UX"],
+  },
+
+    {
+    slug: "fitaura",
+    title: "FitAura",
+    category: "Wellness / Health Tech",
+    description:
+      "A modern 30-day wellness platform designed around personalized guidance, healthy habits, nutrition, movement, and progress tracking.",
+    image: fitauraImage,
+    tags: ["Product Design", "UX/UI", "Wellness"],
   },
 ];
 

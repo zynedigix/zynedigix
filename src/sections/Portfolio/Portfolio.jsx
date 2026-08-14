@@ -11,6 +11,7 @@ import aurelixImage from "../../assets/images/portfolio/aurelix3d.jpg";
 import caFinanceImage from "../../assets/images/portfolio/ca-finance.jpg";
 import eshopImage from "../../assets/images/portfolio/eshop.jpg";
 import pyroshieldImage from "../../assets/images/portfolio/pyroshield.jpg";
+import fitauraImage from "../../assets/images/portfolio/fitauro.jpg";
 import projects from "../../data/portfolioData";
 
 const Portfolio = () => {
